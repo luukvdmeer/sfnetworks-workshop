@@ -1,0 +1,38 @@
+project:
+  type: book
+  execute-dir: project
+  output-dir: docs
+
+book:
+  title: "Analyzing geospatial networks in R with sfnetworks"
+  subtitle: "65th Annual Conference of the South African Statistical Association"
+  author:
+    - name: Lucas van der Meer
+      email: lucas.vandermeer@plus.ac.at
+      orcid: 0000-0001-6336-8628
+    # - name: Lorena Abad
+    #   email: lorena.abad@plus.ac.at
+    #   orcid: 0000-0003-0554-734X
+  date: "today"
+  chapters:
+    - index.qmd
+    # - points.qmd
+    # - lines.qmd
+  repo-url: "https://github.com/luukvdmeer/sfnetworks-workshop"
+  page-footer:
+    left: "SASA 2024 pre-conference workshop"
+    right:
+      - text: "CC-BY-4.0"
+        href: License.md
+  sidebar:
+    search: true
+    logo: https://raw.githubusercontent.com/luukvdmeer/sfnetworks/refs/heads/main/man/figures/logo.png
+    logo-href: https://luukvdmeer.github.io/sfnetworks/
+format:
+  html:
+    number-sections: true
+knitr:
+  opts_chunk:
+    fig-crop: true
+    tidy.opts: { width.cutoff: 80 }
+    
