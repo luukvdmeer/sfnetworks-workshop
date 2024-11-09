@@ -20,4 +20,5 @@ Imports:
   tidyverse,
   units
 Remotes:
+  luukvdmeer/sfnetworks@v1.0
   r-tmap/tmap@v4
