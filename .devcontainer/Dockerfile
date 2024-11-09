@@ -16,3 +16,5 @@ RUN install2.r --error \
   spdep \
   tidygraph \
   units
+  
+ WORKDIR "/workspaces/sfnetworks-workshop"
