@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lucas van der Meer">
-<meta name="dcterms.date" content="2024-11-03">
+<meta name="dcterms.date" content="2024-11-09">
 
 <title>Analyzing geospatial networks in R with sfnetworks</title>
 <style>
@@ -166,10 +166,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#date" id="toc-date" class="nav-link" data-scroll-target="#date">Date</a></li>
   <li><a href="#abstract" id="toc-abstract" class="nav-link" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#pre-requisites" id="toc-pre-requisites" class="nav-link" data-scroll-target="#pre-requisites">Pre-requisites</a>
+  <li><a href="#hands-on-setting" id="toc-hands-on-setting" class="nav-link" data-scroll-target="#hands-on-setting">Hands-on setting</a>
   <ul class="collapse">
-  <li><a href="#r-and-rstudio-installation" id="toc-r-and-rstudio-installation" class="nav-link" data-scroll-target="#r-and-rstudio-installation">R and RStudio installation</a></li>
-  <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R packages</a></li>
+  <li><a href="#working-locally" id="toc-working-locally" class="nav-link" data-scroll-target="#working-locally">1. Working locally</a></li>
+  <li><a href="#using-github-codespaces" id="toc-using-github-codespaces" class="nav-link" data-scroll-target="#using-github-codespaces">2. Using GitHub Codespaces</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -198,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 3, 2024</p>
+      <p class="date">November 9, 2024</p>
     </div>
   </div>
   
@@ -220,27 +220,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="abstract">Abstract</h2>
 <p>Geospatial networks are graphs embedded in geographical space. That means that both the nodes and edges in the graph can be represented as geographic features (e.g.&nbsp;points and lines) with a location somewhere on or near the surface of the earth. They play an important role in many different domains, ranging from transportation planning and logistics to ecology and epidemiology. The structure and characteristics of geospatial networks go beyond standard graph topology, and therefore it is crucial to explicitly take space into account when analyzing them. The R package sfnetworks is created to facilitate such an integrated workflow. It combines the forces of two popular R packages, sf for spatial data science and tidygraph for standard graph analysis, and extends them with functionalities that are specific to geospatial network analysis, such as geographic shortest path calculations, geospatial network cleaning, and topology modification. It also facilitates smooth integration with packages for statistical analysis on spatial linear networks, and is designed to seamlessly fit into tidy data wrangling workflows. This workshop provides an introduction to the sfnetworks package for geospatial network analysis. We will start with simple examples on abstract dummy networks, and gradually move towards the analysis of real-world networks that we extract from OpenStreetMap. We will prepare several analytical tasks to solve, of varying difficulty. If you are already working with geospatial networks, you are also encouraged to bring your own use-cases.</p>
 </section>
-<section id="pre-requisites" class="level2">
-<h2 class="anchored" data-anchor-id="pre-requisites">Pre-requisites</h2>
-<section id="r-and-rstudio-installation" class="level3">
-<h3 class="anchored" data-anchor-id="r-and-rstudio-installation">R and RStudio installation</h3>
+<section id="hands-on-setting" class="level2">
+<h2 class="anchored" data-anchor-id="hands-on-setting">Hands-on setting</h2>
+<p>For this workshop, we have materials to showcase sfnetworks functionalities. However, we encourage you to bring your own data and use cases to test sfnetworks capabilities for your workflows.</p>
+<p>To follow along and code for yourself you have to options:</p>
+<ol type="1">
+<li>Work locally on your own R and RStudio set-up</li>
+<li>Use GitHub Codespaces</li>
+</ol>
+<p>If you did not manage to prepare your set-up in advance for the workshop, we recommend to use GitHub Codespaces.</p>
+<section id="working-locally" class="level3">
+<h3 class="anchored" data-anchor-id="working-locally">1. Working locally</h3>
+<section id="r-and-rstudio-installation" class="level4">
+<h4 class="anchored" data-anchor-id="r-and-rstudio-installation">R and RStudio installation</h4>
 <p>A working installation of:</p>
 <ul>
 <li>R (follow <a href="https://cran.r-project.org/">CRAN recommendations</a> for your set-up).</li>
 <li>RStudio (&gt;= 2024.04.x with Quarto) see <a href="https://posit.co/download/rstudio-desktop/">here</a>.</li>
 </ul>
 </section>
-<section id="r-packages" class="level3">
-<h3 class="anchored" data-anchor-id="r-packages">R packages</h3>
-<p>Please run those commands inside the R console:</p>
+<section id="r-packages" class="level4">
+<h4 class="anchored" data-anchor-id="r-packages">R packages</h4>
+<p>Please run these commands inside the R console:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the remotes package from CRAN Repo</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(remotes)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install workshop and its dependencies</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"luukvdmeer/sfnetworks-workshop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>You can follow along in your own R script, or <a href="https://github.com/luukvdmeer/sfnetworks-workshop">clone the repository</a> to run the Quarto documents interactively.</p>
+</section>
+<section id="clone-the-workshop-repository" class="level4">
+<h4 class="anchored" data-anchor-id="clone-the-workshop-repository">Clone the workshop repository</h4>
+<p>To obtain the workshop materials you can <a href="https://github.com/luukvdmeer/sfnetworks-workshop">clone the repository</a> to run the Quarto documents interactively.</p>
+</section>
+</section>
+<section id="using-github-codespaces" class="level3">
+<h3 class="anchored" data-anchor-id="using-github-codespaces">2. Using GitHub Codespaces</h3>
+<section id="make-sure-you-have-a-github-account" class="level4">
+<h4 class="anchored" data-anchor-id="make-sure-you-have-a-github-account">Make sure you have a GitHub account</h4>
+<p>To use Codespaces you will need a GitHub account. You can <a href="https://github.com/">sign-up here</a>.</p>
+</section>
+<section id="create-your-codespace" class="level4">
+<h4 class="anchored" data-anchor-id="create-your-codespace">Create your codespace</h4>
+<p>Go to the <a href="https://github.com/luukvdmeer/sfnetworks-workshop">workshop GitHub repository</a> and click on the green button called “Code”, go to the “Codespaces” tab and click on “Create codespace on main”.</p>
+<p><img src="figs/codespaces-creation.png" class="img-fluid"></p>
+<p>A new tab will open where your Codespace will start setting-up. The process takes about 10 minutes. If you can do this before the workshop, you will save some time. However, we will go through this instructions at the start of the workshop to make sure the set-up is all set by the time we need to start coding!</p>
+</section>
+<section id="launch-rstudio" class="level4">
+<h4 class="anchored" data-anchor-id="launch-rstudio">Launch RStudio</h4>
+<p>Once the set-up is done, you can go to ports and launch the RStudio application in port 8787 by clicking on the browser button.</p>
+<p><img src="figs/codespaces-ports.png" class="img-fluid"></p>
+<p>If this does not work, you might need to reload the codespace page.</p>
+<p>You will get a pop-up window to type your <code>username/password</code>. You can use <code>rstudio/rstudio</code> for that.</p>
+<p>Now you should be in an RStudio server, congrats!</p>
+<p>The only thing missing is having the workshop files on our “Files” pane. For this, click on the <code>...</code> or “Go to directory” button on the files pane (shown with the red-arrow below). On the pop-up window type <code>/workspaces</code> and Enter.</p>
+<p><img src="figs/codespaces-wd.png" class="img-fluid"></p>
+<p>You should now be able to see the <code>sfnetorks-workshop</code> directory. Click on it and you will have a cloned access of the workshop materials.</p>
+<p>And you are all set!</p>
+</section>
+<section id="codespace-management" class="level4">
+<h4 class="anchored" data-anchor-id="codespace-management">Codespace management</h4>
+<p>Your Codespace should be available to you every time you go to the workshop repository. GitHub will auto-delete your Codespace after a certain amount of time if you have not used it. This is meant to free up your Codespace storage.</p>
+<p>If you have set-up the Codespace some days before the workshop, it should stay there but if you want to control when the Codespace is deleted, you can do so with the dropdown (<code>...</code>) next to your codespace and de-selecting the “Auto-delete codespace” option.</p>
 
 
+</section>
 </section>
 </section>
 </section>

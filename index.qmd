@@ -8,18 +8,31 @@
 
 Geospatial networks are graphs embedded in geographical space. That means that both the nodes and edges in the graph can be represented as geographic features (e.g. points and lines) with a location somewhere on or near the surface of the earth. They play an important role in many different domains, ranging from transportation planning and logistics to ecology and epidemiology. The structure and characteristics of geospatial networks go beyond standard graph topology, and therefore it is crucial to explicitly take space into account when analyzing them. The R package sfnetworks is created to facilitate such an integrated workflow. It combines the forces of two popular R packages, sf for spatial data science and tidygraph for standard graph analysis, and extends them with functionalities that are specific to geospatial network analysis, such as geographic shortest path calculations, geospatial network cleaning, and topology modification. It also facilitates smooth integration with packages for statistical analysis on spatial linear networks, and is designed to seamlessly fit into tidy data wrangling workflows. This workshop provides an introduction to the sfnetworks package for geospatial network analysis. We will start with simple examples on abstract dummy networks, and gradually move towards the analysis of real-world networks that we extract from OpenStreetMap. We will prepare several analytical tasks to solve, of varying difficulty. If you are already working with geospatial networks, you are also encouraged to bring your own use-cases.
 
-## Pre-requisites
+## Hands-on setting
 
-### R and RStudio installation
+For this workshop, we have materials to showcase sfnetworks functionalities. 
+However, we encourage you to bring your own data and use cases to test sfnetworks capabilities for your workflows. 
+
+To follow along and code for yourself you have to options:
+
+1. Work locally on your own R and RStudio set-up
+2. Use GitHub Codespaces
+
+If you did not manage to prepare your set-up in advance for the workshop, we recommend to use GitHub Codespaces.
+
+
+### 1. Working locally
+
+#### R and RStudio installation
 
 A working installation of:
 
 - R (follow [CRAN recommendations](https://cran.r-project.org/) for your set-up).
 - RStudio (>= 2024.04.x with Quarto) see [here](https://posit.co/download/rstudio-desktop/).
 
-### R packages
+#### R packages
 
-Please run those commands inside the R console:
+Please run these commands inside the R console:
 
 ```r
 # Install the remotes package from CRAN Repo
@@ -29,4 +42,55 @@ install.packages(remotes)
 remotes::install_github("luukvdmeer/sfnetworks-workshop")
 ```
 
-You can follow along in your own R script, or [clone the repository](https://github.com/luukvdmeer/sfnetworks-workshop) to run the Quarto documents interactively.
+#### Clone the workshop repository
+
+To obtain the workshop materials you can [clone the repository](https://github.com/luukvdmeer/sfnetworks-workshop) to run the Quarto documents interactively.
+
+### 2. Using GitHub Codespaces
+
+#### Make sure you have a GitHub account
+
+To use Codespaces you will need a GitHub account. You can [sign-up here](https://github.com/).
+
+#### Create your codespace
+
+Go to the [workshop GitHub repository](https://github.com/luukvdmeer/sfnetworks-workshop) and click on the green button called "Code", go to the "Codespaces" tab and click on "Create codespace on main".
+
+![](figs/codespaces-creation.png)
+
+A new tab will open where your Codespace will start setting-up.
+The process takes about 10 minutes.
+If you can do this before the workshop, you will save some time. 
+However, we will go through this instructions at the start of the workshop to make sure the set-up is all set by the time we need to start coding!
+
+#### Launch RStudio
+
+Once the set-up is done, you can go to ports and launch the RStudio application in port 8787 by clicking on the browser button.
+
+![](figs/codespaces-ports.png)
+
+If this does not work, you might need to reload the codespace page.
+
+You will get a pop-up window to type your `username/password`. 
+You can use `rstudio/rstudio` for that. 
+
+Now you should be in an RStudio server, congrats!
+
+The only thing missing is having the workshop files on our "Files" pane. 
+For this, click on the `...` or "Go to directory" button on the files pane (shown with the red-arrow below). 
+On the pop-up window type `/workspaces` and Enter.
+
+![](figs/codespaces-wd.png)
+
+You should now be able to see the `sfnetorks-workshop` directory. 
+Click on it and you will have a cloned access of the workshop materials.
+
+And you are all set!
+
+#### Codespace management
+
+Your Codespace should be available to you every time you go to the workshop repository. 
+GitHub will auto-delete your Codespace after a certain amount of time if you have not used it.
+This is meant to free up your Codespace storage.
+
+If you have set-up the Codespace some days before the workshop, it should stay there but if you want to control when the Codespace is deleted, you can do so with the dropdown (`...`) next to your codespace and de-selecting the "Auto-delete codespace" option.
