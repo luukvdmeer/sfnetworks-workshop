@@ -11,7 +11,8 @@ bb = getbb(city, format_out = 'sf_polygon')
 # Download OSM data for Stellenbosch, with the key=highway
 roads = opq(city) |>
   add_osm_feature(key = "highway") |>
-  osmdata_sf() 
+  osmdata_sf() |> 
+  osm_poly2line()
 # Create a LINESTRING sf object with selected columns
 lines = roads |> 
   pluck("osm_lines") |> 
@@ -24,7 +25,7 @@ lines = roads |>
     lanes, oneway, cycleway
   )
 
-write_sf(lines, "data/stellenbosch/stellenbosch_osm_roads.gpkg")
+write_sf(lines, "data/south-africa/stellenbosch/stellenbosch_osm_roads.gpkg", overwrite = TRUE)
 
 
 ## POIs

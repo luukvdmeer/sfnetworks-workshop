@@ -10,14 +10,14 @@ book:
     - name: Lucas van der Meer
       email: lucas.vandermeer@plus.ac.at
       orcid: 0000-0001-6336-8628
-    # - name: Lorena Abad
-    #   email: lorena.abad@plus.ac.at
-    #   orcid: 0000-0003-0554-734X
+    - name: Lorena Abad
+      email: lorena.abad@plus.ac.at
+      orcid: 0000-0003-0554-734X
   date: "today"
   chapters:
     - index.qmd
-    # - points.qmd
-    # - lines.qmd
+    # - pkg-intro.qmd
+    # - real-world-nets.qmd
   repo-url: "https://github.com/luukvdmeer/sfnetworks-workshop"
   page-footer:
     left: "SASA 2024 pre-conference workshop"

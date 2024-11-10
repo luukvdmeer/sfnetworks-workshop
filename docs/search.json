@@ -37,16 +37,6 @@
     ]
   },
   {
-    "objectID": "index.html#pre-requisites",
-    "href": "index.html#pre-requisites",
-    "title": "Analyzing geospatial networks in R with sfnetworks",
-    "section": "Pre-requisites",
-    "text": "Pre-requisites\n\nR and RStudio installation\nA working installation of:\n\nR (follow CRAN recommendations for your set-up).\nRStudio (&gt;= 2024.04.x with Quarto) see here.\n\n\n\nR packages\nPlease run those commands inside the R console:\n# Install the remotes package from CRAN Repo\ninstall.packages(remotes)\n\n# Install workshop and its dependencies\nremotes::install_github(\"luukvdmeer/sfnetworks-workshop\")\nYou can follow along in your own R script, or clone the repository to run the Quarto documents interactively.",
-    "crumbs": [
-      "About"
-    ]
-  },
-  {
     "objectID": "index.html#hands-on-setting",
     "href": "index.html#hands-on-setting",
     "title": "Analyzing geospatial networks in R with sfnetworks",
