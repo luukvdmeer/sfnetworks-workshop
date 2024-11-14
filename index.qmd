@@ -8,10 +8,21 @@
 
 Geospatial networks are graphs embedded in geographical space. That means that both the nodes and edges in the graph can be represented as geographic features (e.g. points and lines) with a location somewhere on or near the surface of the earth. They play an important role in many different domains, ranging from transportation planning and logistics to ecology and epidemiology. The structure and characteristics of geospatial networks go beyond standard graph topology, and therefore it is crucial to explicitly take space into account when analyzing them. The R package sfnetworks is created to facilitate such an integrated workflow. It combines the forces of two popular R packages, sf for spatial data science and tidygraph for standard graph analysis, and extends them with functionalities that are specific to geospatial network analysis, such as geographic shortest path calculations, geospatial network cleaning, and topology modification. It also facilitates smooth integration with packages for statistical analysis on spatial linear networks, and is designed to seamlessly fit into tidy data wrangling workflows. This workshop provides an introduction to the sfnetworks package for geospatial network analysis. We will start with simple examples on abstract dummy networks, and gradually move towards the analysis of real-world networks that we extract from OpenStreetMap. We will prepare several analytical tasks to solve, of varying difficulty. If you are already working with geospatial networks, you are also encouraged to bring your own use-cases.
 
+## Schedule
+
+| Time | Description |
+| ---- | ----------- |
+|  8h30 -  8h45 | Welcome + set-up |
+|  8h45 -  9h45 | Intro to `sfnetworks` |
+|  9h45 - 10h30 | Hands-on preparation  |
+| 10h30 - 11h00 | *Morning tea* |
+| 11h00 - 12h30 | Hands-on tasks |
+| 12h30 - 13h00 | Present your work + wrap-up |
+
 ## Hands-on setting
 
-For this workshop, we have materials to showcase sfnetworks functionalities. 
-However, we encourage you to bring your own data and use cases to test sfnetworks capabilities for your workflows. 
+For this workshop, we have materials to showcase `sfnetworks` and for you to work with the package on different tasks. 
+We also encourage you to bring your own data and use cases to test `sfnetworks` capabilities for your workflows. 
 
 To follow along and code for yourself you have to options:
 
