@@ -1,0 +1,466 @@
+# Hands-on
+
+## Libraries
+
+Here we load the necessary libraries for our hands-on session.
+
+```{r}
+#| message: false
+#| warning: false
+library(ggplot2)
+library(ggraph)
+library(mapview)
+library(sf)
+library(sfnetworks)
+library(tidygraph)
+library(tidyverse)
+
+## Optional libraries depending on the tasks you pick:
+library(osmdata)
+library(spatstat.linnet)
+```
+
+## Data
+
+A common source for open geospatial network data is OpenStreetMap (<https://www.openstreetmap.org>), a crowd-sourced map platform. 
+
+We use OpenStreetMap data for the hands-on session and we do so using the `osmdata` package, which is the R interface to the Overpass API of OpenStreetMap.
+
+:::{.callout-tip}
+For larger networks, it is **not recommended** to use the Overpass API for data retrieval. You can better download an OpenStreetMap extract (for example from [Geofabrik](http://download.geofabrik.de/)) and read it into R using the `osmextract` package.
+:::
+
+[**We have prepared some data for you, so that we don't overwhelm the OpenStreetMap API**]{style="color:orange;"}. 
+However, this section includes code if you are interested on how to retrieve the data for yourself.
+
+We also queried data from [iNaturalist](https://www.inaturalist.org/) with `rinat`. And have also saved this into a dataset for your convenience.
+
+### Cape Town datasets
+
+If you choose [Nicolaas](@sec-nicolaas), [Annika](@sec-annika) or [Kaya](@sec-kaya), you will be working with data in Cape Town. We provide you with the following datasets:
+
+::: panel-tabset
+
+## Road network
+
+- The [Cape Town road network](data/south-africa/cape-town/cape_town_osm_roads.gpkg) data was queried from OpenStreetMap, using the "highway" key.
+  
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Unfold me to see how to query road data from OSM"
+
+library(osmdata)
+# Set bounding box
+bounds = "Cape Town Ward 115, South Africa"
+# Obtain Cape Town from OSM
+bb = getbb(bounds, format_out = 'sf_polygon')
+
+## Roads
+# Download OSM data for Cape Town, with the key=highway
+roads = opq(bounds) |>
+  add_osm_feature(key = "highway") |>
+  osmdata_sf() |> 
+  osm_poly2line()
+# Create a LINESTRING sf object with selected columns
+lines = roads |> 
+  pluck("osm_lines") |> 
+  st_intersection(bb) |> 
+  filter(st_is(geometry, c("LINESTRING", "MULTILINESTRING"))) |> 
+  st_cast("LINESTRING") |> 
+  dplyr::select(
+    name, 'type' = highway, 
+    maxspeed, surface, 
+    lanes, oneway, cycleway
+  )|> 
+  filter(!type %in% c("bus_stop", "elevator", "steps", "busway",
+                      "corridor", "track", "living_street", NA))
+
+write_sf(
+  lines,
+  "data/south-africa/cape-town/cape_town_osm_roads.gpkg"
+)
+```
+
+- The data is saved as a geopackage (.gpkg). You can load the data using the `sf` package and then convert it into a sfnetwork. PS. we rename the "geom" column to "geometry" due to a small bug with `ggraph` and called the object `ct_roads`
+  
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me to see how to load the data"
+ct_roads = read_sf(
+  "data/south-africa/cape-town/cape_town_osm_roads.gpkg"
+) |> 
+  rename(geometry = geom)
+```
+
+## POIs
+
+- In the tasks below you will find different people who need help with spatial networks. We have compiled here a number of [points of interest (POIs)](data/south-africa/cape-town/cape_town_pois.gpkg) that you will need to complete the tasks. 
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Unfold me for code to create a sf from point coordinates"
+## POIs in CT
+pois = st_sfc(
+  st_point(c(-33.922584,18.426465)),
+  st_point(c(-33.909360,18.422753)),
+  st_point(c(-33.917620,18.422291)),
+  crs = 4326
+) |> 
+  st_as_sf(place = c(
+      "Cape Town Station",
+      "Radisson Red Hotel",
+      "AfricaWorks CBD"
+  )
+)
+
+write_sf(pois, "data/south-africa/cape-town/cape_town_pois.gpkg")
+```
+
+- You can use `sf` to load this data. Remember our "geom" rename trick. We called this object `ct_pois`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me to see how to load the data"
+ct_pois = read_sf(
+  "data/south-africa/cape-town/cape_town_pois.gpkg"
+) |> 
+  rename(geometry = geom)
+```
+
+## Coffee places
+
+- Finally, to help Annika you will need the location of [coffee places in Cape Town](data/south-africa/cape-town/cape_town_cafes.gpkg). For this we queried all the coffee places within the bounds used for the query of the Cape Town road network.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Unfold me for code to query coffee places from OSM"
+## Coffee places in CT
+ct_cafes_osm = opq(bounds) |>
+  add_osm_feature(key = "amenity", value = "cafe") |>
+  osmdata_sf() 
+
+ct_cafes = bind_rows(
+  ct_cafes_osm$osm_points,
+  st_centroid(ct_cafes_osm$osm_polygons)
+)
+
+write_sf(ct_cafes, "data/south-africa/cape-town/cape_town_cafes.gpkg")
+```
+
+- You can use `sf` to load this data. Remember our "geom" rename trick. We called this object `ct_cafes`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me to see how to load the data"
+ct_cafes = read_sf(
+  "data/south-africa/cape-town/cape_town_cafes.gpkg"
+) |> 
+  rename(geometry = geom)
+```
+
+:::
+
+### Kruger datasets
+
+If you choose [Joseph](@sec-joseph) or [Amina](@sec-amina), you will be working in Kruger National Park. We prepared the following datasets:
+
+::: panel-tabset
+
+## Road network
+
+- The [Kruger NP road](data/south-africa/kruger/kruger_osm_roads.gpkg) data was queried from OpenStreetMap, using the "highway" key.
+  
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Unfold me to see how to query road data from OSM"
+
+library(osmdata)
+## Bounding box
+area = "Kruger National Park, South Africa"
+# Obtain Kruger NP boundary from OSM
+bb = getbb(area, format_out = 'sf_polygon')
+
+## Roads
+# Download OSM data for Kruger NP, with the key=highway
+roads = opq(area) |>
+  add_osm_feature(key = "highway") |>
+  osmdata_sf() |> 
+  osm_poly2line()
+# Create a LINESTRING sf object with selected columns
+lines = roads |> 
+  pluck("osm_lines") |> 
+  st_intersection(bb) |> 
+  filter(st_is(geometry, c("LINESTRING", "MULTILINESTRING"))) |> 
+  st_cast("LINESTRING") |> 
+  dplyr::select(
+    name, 'type' = highway, 
+    maxspeed, surface
+  )
+
+write_sf(lines, "data/south-africa/kruger/kruger_osm_roads.gpkg")
+```
+
+- The data is saved as a geopackage (.gpkg). You can load the data using the `sf` package and then convert it into a sfnetwork. PS. we rename the "geom" column to "geometry" due to a small bug with `ggraph`.
+  
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me to see how to load the data"
+kruger_roads = read_sf(
+  "data/south-africa/kruger/kruger_osm_roads.gpkg"
+) |> 
+  rename(geometry = geom)
+```
+
+## Animal sightings
+
+- We queried [mammals' sightings](data/south-africa/kruger/kruger_mammalia_inaturalist.csv) data from iNaturalist. We limited the sightings to Mammals and check on their website the corresponding `place_id` for Kruger National Park
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Unfold me for code to query animal sightings from iNaturalist"
+library(rinat)
+kruger_animals = get_inat_obs(
+  geo = TRUE,
+  taxon_name = "Mammalia",
+  place_id = 69020, # Kruger National Park
+  maxresults = 2500,
+  year = 2024
+) |> select(-c(sound_url, oauth_application_id))
+
+# Save to CSV
+write_csv(
+  kruger_animals,
+  "data/south-africa/kruger/kruger_mammalia_inaturalist.csv"
+)
+```
+
+- The data is saved as a CSV file. You can use `readr`, part of the `tidyverse` package bundle to read this in.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me to see how to read CSV data"
+test = read_csv(
+  "data/south-africa/kruger/kruger_mammalia_inaturalist.csv",
+  show_col_types = TRUE
+)
+```
+
+:::
+
+## Pre-processing
+
+::: panel-tabset
+## [**1. Creating the network**]{style="color:orange;"}
+
+The retrieved streets from OpenStreetMap can be converted into a sfnetwork object, and projected into the South African CRS.
+
+Try to create the sfnetwork yourself. 
+You can check the package documentation to help you. 
+For network creation you can type `?as_sfnetwork` on your console.
+
+If you are stuck, check the solution code on the next tabs.
+
+## Cape Town
+
+```{r}
+ct_sfn = as_sfnetwork(ct_roads, directed = FALSE) |>
+  st_transform(22293)
+
+ct_sfn
+```
+
+## Kruger
+
+```{r}
+kruger_sfn = as_sfnetwork(kruger_roads, directed = FALSE) |>
+  st_transform(22293)
+
+kruger_sfn
+```
+:::
+
+::: panel-tabset
+## [**2. Cleaning the network**]{style="color:orange;"}
+
+A typical workflow to clean a network was shown in the introductory part. 
+Remember when we talked about cleaning the dirty network?
+For networks queried from OpenStreetMap, it is particularly important to clean your network. 
+You can find more information in the package vignette [vignette name here]().
+
+This is a recap of the usual steps:
+
+a. Subdivide the edges
+b. Smooth pseudo nodes
+c. Extract the largest component
+
+If you got stuck and can't remember the code, see the next tabs.
+
+## Cape Town
+
+```{r}
+ct_sfn_clean = ct_sfn |>
+  convert(to_spatial_subdivision) |>
+  convert(to_spatial_smooth, .clean = TRUE) |>
+  convert(to_largest_component)
+```
+
+## Kruger
+
+```{r}
+kruger_sfn_clean = kruger_sfn |>
+  convert(to_spatial_subdivision) |>
+  convert(to_spatial_smooth, .clean = TRUE) |>
+  convert(to_largest_component)
+```
+
+:::
+
+
+::: panel-tabset
+## [**3. Explore the network**]{style="color:orange;"}
+
+A good way to check the network you are dealing with is plotting. `sfnetworks` has a default plot method, but `ggraph` allows you a bit more flexibility when plotting your network. 
+
+For an interactive view you can use `mapview`. 
+
+If you got stuck and don't know how to visualize you network, see examples in the next tabs.
+
+## Cape Town
+
+To plot a `sfnetwork` object using the default you can just call the `plot()` function. You can also pass arguments to the nodes and edges separately. See how by typing `?plot.sfnetwork` on your R console.
+
+```{r}
+plot(ct_sfn_clean)
+```
+
+Interactive plots can be created with `mapview()`. Run the following chunk interactively in your console.
+
+```{r}
+#| eval: false
+mapview(st_as_sf(ct_sfn_clean, "edges")) +
+mapview(st_as_sf(ct_sfn_clean, "nodes"))
+```
+
+## Kruger
+
+`ggraph` extends `ggplot2` to support graph structures. Developed by the same person as tidygraph, it was only logical it should work with `sfnetworks`,,
+
+See more about using `ggraph` with `sfnetworks` objects by checking the docs ([`ggraph` website](https://ggraph.data-imaginist.com/index.html), `?ggraph::geom_node_sf()`, `?ggraph::geom_edge_sf()`)
+
+```{r}
+ggraph(kruger_sfn_clean, "sf") +
+  geom_node_sf(size = 0.5) + 
+  geom_edge_sf(aes(color = surface)) +
+  theme_bw()
+```
+
+:::
+
+## Tasks
+You are spatial network expert and many people need your help for distinct tasks. 
+Below you will get to know a bit about them, what they like and what they need your help with.
+Pick your favorite.
+
+### Nicolaas {#sec-nicolaas .unnumbered}
+
+![](personas/personas-Nicolaas.png)
+
+::: panel-tabset
+
+## Tasks
+
+1.  Compute the shortest route between Cape Town train station and the Radison Red Hotel where Nicolaas has his meeting ⭐⚪⚪
+2.  Compute the route that avoids heavy traffic and prefers bikelanes ⭐⭐⚪
+3.  Compute how much longer that optimal route is ⭐⭐⚪
+4.  Do that computation also for all people at all address points ⭐⭐⚪
+5.  If you have limited budget, where would you build bike lanes? ⭐⭐⭐
+6.  Can you create a better "bikeability" weight? ⭐⭐⭐
+
+## Hint 1
+
+## Hint 2
+
+## Hint 3
+:::
+
+### Annika {#sec-annika .unnumbered}
+
+![](personas/personas-Annika.png)
+
+::: panel-tabset
+
+## Tasks
+
+1. How many coffee shops can Annika reach from her coworking space? (cumulative opportunities accessibility) ⭐⚪⚪
+2. Now integrate a distance decay (gravitiy accessibility) ⭐⭐⚪
+3. Also integrate a attractiveness of the different destinations ⭐⭐⚪
+4. Integrate both supply and demand into the measure (2SFCA accessibility) ⭐⭐⭐
+
+## Hint 1
+
+## Hint 2
+
+## Hint 3
+:::
+
+### Kaya {#sec-kaya .unnumbered}
+
+![](personas/personas-Kaya.png)
+
+::: panel-tabset
+
+## Tasks
+
+1. Create a figure with the street directions/azimuths ⭐⚪⚪
+2. Plot and map the distributions of degree centralilty, betweenness centrality, straightness centrality ⭐⭐⚪
+3. ... ⭐⭐⭐
+
+## Hint 1
+
+## Hint 2
+
+## Hint 3
+:::
+
+### Joseph {#sec-joseph .unnumbered}
+
+![](personas/personas-Joseph.png)
+
+::: panel-tabset
+
+## Tasks
+
+1. Compute the probabilities of lion sightings per road type ⭐⭐⚪
+2. Compute the most optimal route so that Francois can visit all the camps and how long would it take him? ⭐⭐⚪
+3. Identify locations with high probabilities of seeing the big 5, do these correspond to the rest camps? ⭐⭐⚪
+
+## Hint 1
+
+## Hint 2
+
+## Hint 3
+:::
+
+### Amina {#sec-amina .unnumbered}
+
+![](personas/personas-Amina.png)
+
+::: panel-tabset
+
+## Tasks
+
+1. Create a map of animal sightings delineating hotspots ⭐⭐⚪
+2. Compute some descriptive statistics of the sightings in relation to the network ⭐⭐⚪
+3. Can Amina use Kruger data to predict wildlife sightings in the Limpopo Park in Mozambique? ⭐⭐⭐
+
+## Hint 1
+
+## Hint 2
+
+## Hint 3
+:::
