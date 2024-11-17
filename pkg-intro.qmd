@@ -1,4 +1,4 @@
-# The `sfnetworks` package
+# Introduction to the sfnetworks package
 
 ```{r}
 #| warning: false
@@ -11,28 +11,30 @@ library(mapview)
 ```
 
 ```{r}
-par(mar = c(0, 0, 0, 0))
+set_margins = function() par(mar = c(0, 0, 0, 0))
 ```
 
-## Introduction
+## Background
 
 ### What are spatial networks
 
-Spatial networks are networks in which the nodes are embedded in space. This may be an abstract mathematical space. Or a "very-small-scale" space, like the human brain. Or a "very-large-scale" space, like star constellations.
+Spatial networks are graphs embedded in space. Graphs are mathematical structures to model relations between objects. The objects are called nodes, and the relations between them are called edges. We usually use the term **network** for graph structures that have attributes. The space in which the graphs is embedded may be an abstract mathematical space. Or a "very-small-scale" space, like the human brain. Or a "very-large-scale" space, like star constellations.
 
 ### What are geospatial networks
 
-Geospatial networks are a subset of spatial networks. In geospatial networks, the nodes are embedded in **geographical space**. Geographical space encompasses locations on or near the surface of the Earth, but usually does not reach the level of detail of neurons in a brain, processors in a computer, or chloroplasts in a leaf.
+Geospatial networks are a subset of spatial networks. In geospatial networks, the nodes are embedded in **geographical space**. Geographical space encompasses locations on or near the surface of the Earth. We usually only consider those networks for which their geographical location is also relevant, excluding micro-scale networks such as neurons in a brain, processors in a computer, or chloroplasts in a leaf.
 
 ### What makes geospatial networks special
 
 Since nodes are embedded in space, the edges that connect them by definition have a geographical cost. Travelling an edge is not "for free". This brings along **spatial constraints**, making geospatial networks "special" in different regards:
 
--   In many situations nodes are more likely to be connected when they are close to each other in space.
--   In many situations there are limits to the maximum degree a node can have, and to the ways a network can grow.
--   In some cases (e.g. road networks, river networks, pipeline networks) the edges are also explicitly situated in space, while in others (e.g. airline routes, geo-located social networks) the edges are implicitly spatial. In the explicit case, the shape of an edge can be quite different from the Euclidean shortest path between its boundary nodes, and edges may also spatially cross each other without connecting.
--   In real-world geospatial networks, the network itself is rarely a closed system. The network is embedded in a space in which all different kinds of processes take place, which are again geospatial by themselves. This makes us often ask questions like: "What happens in the spatial proximity of the network and how does this relate to the network?". We will find ourselves applying all kinds of geospatial analytical operations to the network itself and its surroundings, like snapping points to their nearest nodes, performing spatial joins and spatial filters, et cetera.
--   Geospatial networks also bring along common issues with representation of geospatial data that are unknown to "standard networks", for example, coordinate reference systems and transformations between them.
+- Usually nodes are more likely to be connected when they are close to each other in space.
+- Usually spatial constraints put limits on the maximum degree a node can have, and to on the ways a network can grow.
+- Many common tasks in network analysis are often done different for spatial networks. For example, shortest path computation considers geographic costs of movement, and not just the number of edges to traverse. Community detection considers spatial proximity next to modularity. Et cetera.
+- Often edges have their own explicit embedding in space as well, which may be quite different from the Euclidean shortest path between its incident nodes (e.g. in road networks, river networks, pipeline networks).
+- In real-world geospatial networks, the network itself is rarely a closed system. The nodes and edges of the network are embedded in a space in which all different kinds of processes take place, which are again geospatial by themselves. This makes us often ask questions like: "What happens in the spatial proximity of the network and how does this relate to the network?". We will find ourselves applying all kinds of geospatial analytical operations to the network itself and its surroundings, like snapping points to their nearest nodes, performing spatial joins and spatial filters, et cetera.
+- When doing statistical analysis of processes on the network, we need to be aware of the standard peculiarities of geospatial data, such as spatial autocorrelation and spatial heterogeneity.
+- Geospatial networks also bring along common issues with representation of geospatial data that are unknown to "standard networks", for example, coordinate reference systems and transformations between them.
 
 In conclusion: The topology of the graph structure alone does not contain all the information that characterizes a geospatial network. We need to explicitly take space into account when analyzing geospatial networks.
 
@@ -40,12 +42,14 @@ In conclusion: The topology of the graph structure alone does not contain all th
 
 In R there are two very good packages for (geo)spatial analysis and standard graph analysis:
 
--   The `sf` package brings the simple features standard to R, allowing to represent and analyze spatial vector data such as points, lines and polygons.
--   The `tidygraph` package provides a tidy interface to the large network analysis library `igraph`, which is written in C ans also has an R package.
+- The `{sf}` package brings the simple features standard to R and provides an interface to low-level geospatial system libraries such as GDAL, GEOS, and s2, allowing to represent and analyze spatial vector data such as points, lines and polygons.
+- The `{tidygraph}` package provides a tidy interface to the large network analysis library `{igraph}`, which is written in C and also has an R API.
 
 These packages are great for their purposes, but `sf` does not know about networks ...
 
 ```{r}
+#| code-fold: true
+#| code-summary: Code to create some spatial nodes and edges
 p01 = st_point(c(0, 1))
 p02 = st_point(c(1, 1))
 p03 = st_point(c(1, 2))
@@ -75,50 +79,70 @@ l13 = st_sfc(st_linestring(c(p09, p11)))
 l14 = st_sfc(st_linestring(c(p10, p11)))
 l15 = st_sfc(st_linestring(c(p11, p12)))
 
-points = st_sf(
+nodes = st_sf(
   geometry = do.call("c", lapply(list(p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12), st_sfc))
 )
 
-lines = st_sf(
+edges = st_sf(
+  from = c(1, 2, 2, 2, 3, 4, 5, 5, 7, 7, 8, 8, 9, 10, 11),
+  to = c(2, 3, 4, 5, 6, 10, 6, 7, 8, 9, 9, 10, 11, 11, 12),
   geometry = c(l01, l02, l03, l04, l05, l06, l07, l08, l09, l10, l11, l12, l13, l14, l15)
 )
+```
 
-plot(lines)
+```{r}
+nodes
+```
+
+```{r}
+edges
+```
+
+```{r}
+#| layout-ncol: 2
+#| fig-cap:
+#|   - "Nodes"
+#|   - "Edges"
+set_margins()
+plot(nodes)
+plot(edges)
 ```
 
 ```{r}
 #| error: true
 
-with_graph(lines, centrality_edge_betweenness())
+with_graph(edges, centrality_edge_betweenness())
 ```
 
 ... and `tidygraph` does not know about space.
 
 ```{r}
-nodes = points
+graph = tbl_graph(nodes, edges, directed = FALSE)
+```
 
-edges = lines |>
-  mutate(
-    from = c(1, 2, 2, 2, 3, 4, 5, 5, 7, 7, 8, 8, 9, 10, 11),
-    to = c(2, 3, 4, 5, 6, 10, 6, 7, 8, 9, 9, 10, 11, 11, 12)
-  )
-
-graph = tbl_graph(nodes, edges)
-
+```{r}
+set_margins()
 plot(graph)
 ```
 
 ```{r}
-#| error: true
+area = st_convex_hull(st_combine(edges[10:15, ]))
+```
 
+```{r}
+#| error: true
 graph |>
-  st_filter(st_convex_hull(st_combine(lines[10:15])))
+  st_filter(area)
 ```
 
 Combining the power of the two lead to the birth of `sfnetworks`, a package for spatial network analysis in R.
 
 ```{r}
-net = as_sfnetwork(lines, directed = FALSE)
+net = sfnetwork(nodes, edges, directed = FALSE)
+```
+
+```{r}
+set_margins()
 plot(net)
 ```
 
@@ -130,12 +154,24 @@ with_graph(net, centrality_edge_betweenness())
 ```
 
 ```{r}
-net |>
-  st_filter(st_convex_hull(st_combine(lines[10:15, ]))) |>
-  plot()
+filtered = net |>
+  st_filter(area)
 ```
 
-## Basic functionalities
+```{r}
+#| layout-ncol: 2
+#| fig-cap:
+#|   - "Original"
+#|   - "Filtered"
+set_margins()
+plot(net)
+plot(area, border = "orange", lwd = 2, lty = 4, add = TRUE)
+plot(filtered)
+```
+
+**INSERT FIGURE**
+
+## Content
 
 ### Data structure
 
@@ -144,6 +180,8 @@ The sfnetwork data structure looks like a combination of an sf table for the nod
 ```{r}
 net
 ```
+
+**INSERT FIGURE**
 
 Just as with an sf object, we can assign it a coordinate reference system...
 
@@ -159,17 +197,54 @@ net |>
   st_transform(4326)
 ```
 
-Even our toy network now has a location in geographical space! (Zoom out to see where exactly)
-
-```{r}
-#| warning: false
-mapview(st_as_sf(net, "nodes")) + st_as_sf(net, "edges")
-```
-
-Although the structure looked like a container with two sf tables, it is not really. In fact, an sfnetwork inherits from an igraph object, a fully-fledged graph object.
+Although the structure looks like a container with two sf tables, it is not really. In fact, the sfnetwork class inherits the igraph class, a fully-fledged graph object.
 
 ```{r}
 class(net)
+```
+
+### Creation
+
+One of the most common ways to create a spatial network is to start with a set of spatial lines, and convert them into a network by adding nodes at the endpoints of the lines, with shared endpoints among multiple lines becoming a single node.
+
+```{r}
+set_margins()
+plot(st_geometry(roxel))
+```
+
+```{r}
+set_margins()
+plot(as_sfnetwork(roxel))
+```
+
+Another way is to start with a set of spatial points, and specify which of these points are connected to each other. You can do this by providing an adjacency matrix, but also by choosing from a pre-defined set of methods.
+
+```{r}
+set_margins()
+plot(st_geometry(mozart), pch = 20)
+```
+
+```{r}
+#| layout-ncol: 2
+#| layout-nrow: 4
+#| fig-cap: 
+#|   - "Complete"
+#|   - "Sequential"
+#|   - "Minimum spanning tree"
+#|   - "Delaunay triangulation"
+#|   - "Gabriel"
+#|   - "Relative neighbors"
+#|   - "Nearest neighbors"
+#|   - "K nearest neighbors (k = 3)"
+set_margins()
+plot(as_sfnetwork(mozart, "complete"))
+plot(as_sfnetwork(mozart, "sequence"))
+plot(as_sfnetwork(mozart, "mst"))
+plot(as_sfnetwork(mozart, "delaunay"))
+plot(as_sfnetwork(mozart, "gabriel"))
+plot(as_sfnetwork(mozart, "rn"))
+plot(as_sfnetwork(mozart, "knn"))
+plot(as_sfnetwork(mozart, "knn", k = 3))
 ```
 
 ### Tidy workflows
@@ -187,7 +262,9 @@ net = net |>
     name = paste0("edge_", letters[1:n()]),
     length = st_length(geometry)
   )
+```
 
+```
 net
 ```
 
@@ -215,34 +292,9 @@ net |>
   filter(keep_me)
 ```
 
-However, not everything works. You can for example not use the standard groupby-apply-combine workflow, since this would break the graph structure.
-
-```{r}
-#| error: true
-
-net |>
-  activate(nodes) |>
-  group_by(keep_me) |>
-  summarize(n = n())
-```
-
-If you want to summarize information from one of the tables, you can always extract the table from the network structure, and keep working like you normally would.
-
-:::{.callout-tip}
-If you want to group nodes inside the network structure, and reconnect the edges based on this grouping, look at `tidygraph::to_contracted()` and its spatial variant `sfnetworks::to_spatial_contracted()`.
-:::
-
-```{r}
-net |>
-  activate(nodes) |>
-  st_as_sf() |>
-  group_by(keep_me) |>
-  summarise(n = n())
-```
-
 ### Network analysis
 
-Since sfnetwork objects inherit from tbl_graph objects, who in turn inherit from igraph objects, we can apply (almost) all of tidygraphs and igraphs network analysis functionalities to sfnetwork objects without the need for conversion.
+Since the sfnetwork class inherits the tbl_graph class, which itself inherits the igraph class, we can apply (almost) all of tidygraphs and igraphs network analysis functionalities to sfnetwork objects without the need for conversion.
 
 For example, computing node degrees and inspecting the degree distribution ...
 
@@ -271,27 +323,35 @@ ggraph(net, "sf") +
 ... or converting the network to its minimum spanning tree (the subset of edges that connects all the nodes, without cycles and with the minimum possible edge length) ...
 
 ```{r}
-net |>
-  convert(to_minimum_spanning_tree, weights = length) |>
-  plot()
+mst = net |>
+  convert(to_minimum_spanning_tree, weights = length)
+```
+
+```{r}
+set_margins()
+plot(mst)
 ```
 
 ... or identify bridge edges (edges that will increase the number of connected components in the network when removed).
 
 ```{r}
-net |>
+net = net |>
   activate(edges) |>
-  mutate(is_bridge = edge_is_bridge()) |>
-  ggraph("sf") +
-    geom_edge_sf(aes(color = is_bridge)) +
-    geom_node_sf() +
-    theme_void()
+  mutate(is_bridge = edge_is_bridge())
+```
+
+```{r}
+set_margins()
+ggraph(net, "sf") +
+  geom_edge_sf(aes(color = is_bridge)) +
+  geom_node_sf() +
+  theme_void()
 ```
 
 This was just a very small part of all the functions that tidygraph contains. There is much more which we will not go through here. See the [tidygraph documentation](https://tidygraph.data-imaginist.com/).
 
 :::{.callout-tip}
-If tidygraph does not provide a tidy interface for an igraph function, or you don't like the way the interface is coded, you can also apply igraph functions directly to an sfnetwork object. Do note that when such a function returns a network, this will be an igraph object rather than a sfnetwork object.
+If tidygraph does not provide a tidy interface for an igraph function, or you don't like the way the interface is coded, you can also apply igraph functions directly to an sfnetwork object. Do note that when such a function returns a network, this will be an igraph object rather than a sfnetwork object, unless you call the function inside `wrap_igraph()`.
 :::
   
 ### Spatial analysis
@@ -307,9 +367,12 @@ poly = st_polygon(list(matrix(c(1.8,0.8,4.2,0.8,4.2,2.2,1.8,2.2,1.8,0.8), ncol =
 net_filtered = net |>
   activate(nodes) |>
   st_filter(poly)
+```
 
+```{r}
+set_margins()
 plot(net, col = "grey")
-plot(poly, border = "firebrick", lwd = 2, lty = 4, add = TRUE)
+plot(poly, border = "orange", lwd = 2, lty = 4, add = TRUE)
 plot(net_filtered, lwd = 2, cex = 2, add = TRUE)
 ```
 
@@ -326,25 +389,20 @@ polys = st_sf(geometry = c(poly1, poly2)) |>
   mutate(poly_id = c(1, 2))
 
 net_joined = net |>
+  activate(nodes) |>
   st_join(polys)
+```
 
+```{r}
 net_joined
 ```
 
 ```{r}
+set_margins()
 plot(st_geometry(net_joined, "edges"))
-plot(st_geometry(polys)[1], border = "firebrick", lwd = 2, lty = 4, add = TRUE)
+plot(st_geometry(polys)[1], border = "orange", lwd = 2, lty = 4, add = TRUE)
 plot(st_geometry(polys)[2], border = "deepskyblue", lwd = 2, lty = 4, add = TRUE)
-plot(select(st_as_sf(net_joined, "nodes"), poly_id), pal = c("firebrick", "deepskyblue"), pch = 20, cex = 2, add = TRUE)
-```
-
-... but not functions that would break the network structure, like a spatial union.
-
-```{r}
-#| error: true
-
-net |>
-  st_union()
+plot(select(st_as_sf(net_joined, "nodes"), poly_id), pal = c("orange", "deepskyblue"), pch = 20, cex = 2, add = TRUE)
 ```
 
 Also in this section we only showed a very small part of what sf can do and how this can be used on sfnetwork objects. There is much more which we will not go through here. See the [sf documentation](https://r-spatial.github.io/sf/).
@@ -363,40 +421,51 @@ points = st_sf(geometry = c(p1, p2)) |>
   mutate(point_id = c("a", "b"))
 
 blended_net = st_network_blend(net, points)
-
-plot(blended_net)
-plot(points, pal = c("firebrick", "deepskyblue"), pch = 8, cex = 2, add = TRUE)
 ```
 
-Another example is to compute the circuity of spatially explicit edges, which basically is the ratio between the geographic length of the edge geometry and the euclidean distance between its two boundary nodes. In our toy network, these two are the same, so the circuity will always be 1.
+```{r}
+set_margins()
+plot(blended_net)
+plot(points, pal = c("orange", "deepskyblue"), pch = 8, cex = 2, add = TRUE)
+```
+
+We can also compute several spatial measures for edges and nodes. For example, we can compute the geographic *length* of each edge. These may be longer than the euclidean distance between its source and target nodes, which is also called the *displacement* of the edge. The ratio between the two is known as the *circuity*. A related concept is the *straightness centrality* of nodes, which is calculated by first computing the ratios between length and displacement for the shortest paths between a node and all other nodes in the network, and the taking the average of those values.
 
 ```{r}
 net |>
+  activate(nodes) |>
+  mutate(sc = centrality_straightness()) |>
   activate(edges) |>
-  mutate(circuity = edge_circuity()) |>
-  ggraph("sf") +
-  geom_edge_sf(aes(color = circuity)) +
-  geom_node_sf() +
-  theme_void()
+  mutate(length = edge_length(), dp = edge_displacement(), circuity = edge_circuity())
 ```
 
 A core task in spatial network analysis is shortest path calculations. This is something that is also relevant for standard networks, but tidygraph does not put a lot of emphasis on it.
 
 ```{r}
-path = st_network_paths(net, from = 1, to = 12, weights = "length")
+path = st_network_paths(net, from = 1, to = 12)
 path
 ```
 
 ```{r}
-plot(net, col = "grey50")
-plot(slice(activate(net, nodes), path$node_path[[1]]), col = "firebrick", cex = 2, lwd = 2, add = TRUE)
+set_margins()
+ggraph(net, "sf") +
+  geom_edge_sf(color = "grey50") +
+  geom_sf(data = path, color = "orange", linewidth = 1) +
+  geom_node_sf(color = "grey50", size = 2) +
+  theme_void()
 ```
 
 ```{r}
 path = st_network_paths(net, from = 1, to = 12, weights = NA)
+```
 
-plot(net, col = "grey50")
-plot(slice(activate(net, nodes), path$node_path[[1]]), col = "firebrick", cex = 2, lwd = 2, add = TRUE)
+```{r}
+set_margins()
+ggraph(net, "sf") +
+  geom_edge_sf(color = "grey50") +
+  geom_sf(data = path, color = "orange", linewidth = 1) +
+  geom_node_sf(color = "grey50", size = 2) +
+  theme_void()
 ```
 
 Additionally, sfnetworks lets you compute shortest paths between any pair of spatial points, by first snapping them to their nearest network node.
@@ -405,11 +474,18 @@ Additionally, sfnetworks lets you compute shortest paths between any pair of spa
 p1 = st_sfc(st_point(c(0, 1.2)), crs = st_crs(net))
 p2 = st_sfc(st_point(c(5.6, 1.8)), crs = st_crs(net))
 
+pts = st_sf(geometry = c(p1, p2))
 path = st_network_paths(net, from = p1, to = p2, weights = "length")
+```
 
-plot(net, col = "grey50")
-plot(slice(activate(net, nodes), path$node_path[[1]]), col = "firebrick", cex = 2, lwd = 2, add = TRUE)
-plot(c(p1, p2), col = "deepskyblue", pch = 8, cex = 2, add = TRUE)
+```{r}
+set_margins()
+ggraph(net, "sf") +
+  geom_edge_sf(color = "grey50") +
+  geom_sf(data = path, color = "orange", linewidth = 1) +
+  geom_node_sf(color = "grey50", size = 2) +
+  geom_sf(data = pts, color = "deepskyblue", pch = 8, size = 4) +
+  theme_void()
 ```
 
 As a bridge to the next part on "Real-world networks", we'll show a subset of functions we implemented to clean a spatial network. Because real-world networks are rarely as clean as our beloved toy network.
@@ -417,113 +493,84 @@ As a bridge to the next part on "Real-world networks", we'll show a subset of fu
 Lets first create a very dirty toy network.
 
 ```{r}
+#| code-fold: true
+#| code-summary: Code to create a dirty network for cleaning
 p01 = st_point(c(0, 1))
 p02 = st_point(c(1, 1))
-p03 = st_point(c(3, 1))
-p04 = st_point(c(4, 1))
-p05 = st_point(c(2, 2))
-p06 = st_point(c(2, 0))
-p07 = st_point(c(4, 2))
-p08 = st_point(c(4, 0))
-p09 = st_point(c(5, 1.5))
-p10 = st_point(c(5, 0))
-p11 = st_point(c(5, 0.5))
-p12 = st_point(c(5, 1))
-p13 = st_point(c(2, 1))
+p03 = st_point(c(2, 1))
+p04 = st_point(c(3, 1))
+p05 = st_point(c(4, 1))
+p06 = st_point(c(3, 2))
+p07 = st_point(c(3, 0))
+p08 = st_point(c(4, 3))
+p09 = st_point(c(4, 2))
+p10 = st_point(c(4, 0))
+p11 = st_point(c(5, 2))
+p12 = st_point(c(5, 0))
+p13 = st_point(c(5, -1))
+p14 = st_point(c(5.8, 1))
+p15 = st_point(c(6, 1.2))
+p16 = st_point(c(6.2, 1))
+p17 = st_point(c(6, 0.8))
+p18 = st_point(c(6, 2))
+p19 = st_point(c(6, -1))
+p20 = st_point(c(7, 1))
 
-l01 = st_sfc(st_linestring(c(p01, p02)))
-l02 = st_sfc(st_linestring(c(p02, p13, p03)))
-l03 = st_sfc(st_linestring(c(p03, p04)))
-l04 = st_sfc(st_linestring(c(p05, p13, p06)))
-l05 = st_sfc(st_linestring(c(p04, p07)))
-l06 = st_sfc(st_linestring(c(p04, p08)))
-l07 = st_sfc(st_linestring(c(p04, p09, p07)))
-l08 = st_sfc(st_linestring(c(p08, p10, p11, p08)))
-l09 = st_sfc(st_linestring(c(p04, p12)))
+l01 = st_sfc(st_linestring(c(p01, p02, p03)))
+l02 = st_sfc(st_linestring(c(p03, p04, p05)))
+l03 = st_sfc(st_linestring(c(p06, p04, p07)))
+l04 = st_sfc(st_linestring(c(p08, p11, p09)))
+l05 = st_sfc(st_linestring(c(p09, p05, p10)))
+l06 = st_sfc(st_linestring(c(p08, p09)))
+l07 = st_sfc(st_linestring(c(p10, p12, p13, p10)))
+l08 = st_sfc(st_linestring(c(p05, p14)))
+l09 = st_sfc(st_linestring(c(p15, p14)))
+l10 = st_sfc(st_linestring(c(p16, p15)))
+l11 = st_sfc(st_linestring(c(p14, p17)))
+l12 = st_sfc(st_linestring(c(p17, p16)))
+l13 = st_sfc(st_linestring(c(p15, p18)))
+l14 = st_sfc(st_linestring(c(p17, p19)))
+l15 = st_sfc(st_linestring(c(p16, p20)))
 
-lines = st_sf(
-  geometry = c(l01, l02, l03, l04, l05, l06, l07, l08, l09)
+lines = c(
+  l01, l02, l03, l05, l06,
+  l04, l07, l08, l09, l10,
+  l11, l12, l13, l14, l15
 )
 
-net_dirty = as_sfnetwork(lines)
-
-plot(net_dirty)
+dirty = as_sfnetwork(lines)
 ```
 
-In graph theory terms simplifying is the process of removing multiple edges (more than one edge connecting the same pair of nodes) and loop edges (edges that start and end at the same node). The function `to_spatial_simple()` does exactly this.
-
 ```{r}
-net_dirty = net_dirty |>
-  convert(to_spatial_simple)
-
-plot(net_dirty)
+set_margins()
+plot(dirty)
 ```
 
-In graph theory terms the process of splitting and edge is called *subdivision*: the subdivision of an edge $o = \{a, b\}$ (i.e. an edge from node $a$ to node $b$) is the addition of a new node $c$ and the replacement of $o$ by two new edges $p = \{a, c\}$ and $q = \{c, b\}$.
-
-The function `to_spatial_subdivision()` subdivides edges at interior points in an edge geometry (i.e. those points that define the shape of the geometry but are not endpoints) whenever these interior points are equal to one or more interior points or endpoints of other edges, and recalculates network connectivity afterwards.
-
-To illustrate the workflow, lets consider a situation where an interior point $p_{x}$ in edge $x$ is shared with point $p_{y}$ in edge $y$. That gives two possible situations:
-
-- $p_{y}$ is an interior point of $y$. Since $p_{x}$ and $p_{y}$ are both interior points, neither of them is already a node in the network. Then:
-  - $x$ is subdivided at $p_{x}$ into two new edges $x_{1}$ and $x_{2}$ and new node $p_{x}$.
-  - $y$ is subdivided at $p_{y}$ into two new edges $y_{1}$ and $y_{2}$ and new node $p_{y}$.
-  - The new nodes $p_{x}$ and $p_{y}$ are merged into a single node $p$ with the edge set $\{x_{1}, x_{2}, y_{1}, y_{2}\}$ as incidents.
-- $p_{y}$ is and endpoint of $y$. Since $p_{y}$ is an edge endpoint, it is already a node in the network. Then:
-  - $x$ is subdivided at $p_{x}$ into two new edges $x_{1}$ and $x_{2}$ and new node $p_{x}$.
-  - The new node $p_{x}$ is merged with node $p_{y}$ into a single node $p$ with the edge set $\{y, x_{1}, x_{2}\}$ as incidents.
-
-Note that an edge is *not* subdivided when it crosses another edge at a location that is not an interior point or endpoint in the linestring geometry of any of the two edges.
-
 ```{r}
-net_dirty = net_dirty |>
-  convert(to_spatial_subdivision)
-
-plot(net_dirty)
+simple = convert(dirty, to_spatial_simple)
+sub = convert(simple, to_spatial_subdivision)
+smooth = convert(sub, to_spatial_smooth)
+clean = convert(smooth, to_spatial_contracted, group_spatial_dbscan(0.5))
 ```
 
-A network may contain nodes that have only one incoming and one outgoing edge. For tasks like calculating shortest paths, such nodes are redundant, because they don't represent a point where different directions can possibly be taken. Sometimes, these type of nodes are referred to as *pseudo nodes*. Note that their equivalent in undirected networks is any node with only two incident edges, since *incoming* and *outgoing* does not have a meaning there. To reduce complexity of subsequent operations, we might want to get rid of these pseudo nodes. In graph theory terms this process is the opposite of subdivision and also called *smoothing*: smoothing a node $b$ with incident edges $o = \{a, b\}$ and $p = \{b, c\}$ removes $b$, $o$ and $p$ and creates the new edge $q = \{a, c\}$.
-
-The function `to_spatial_smooth()` iteratively smooths pseudo nodes, and after each removal concatenates the linestring geometries of the two affected edges together into a new, single linestring geometry.
+```{r}
+#| layout-ncol: 2
+#| layout-nrow: 2
+#| fig-cap: 
+#|   - "Simplified"
+#|   - "Subdivided"
+#|   - "Smoothed"
+#|   - "Contracted"
+set_margins()
+plot(simple)
+plot(sub)
+plot(smooth)
+plot(clean)
+```
 
 ```{r}
-net_dirty = net_dirty |>
-  convert(to_spatial_smooth)
-
-plot(net_dirty)
+set_margins()
+plot(clean)
 ```
 
 Also in this section, we only showed a subset of function that `sfnetworks` added on top of the existing `sf` and `tidygraph` functions. There is much more which we will not go through here. See the [sfnetworks documentation](https://luukvdmeer.github.io/sfnetworks/).
-
-## What's to come
-
-An open-source package is never done... (sigh) We still have many ideas of how to improve and extend `sfnetworks`. I will shortly show now two topics we are working on currently.
-
-### Creating networks from spatial point data
-
-::: callout-warning
-Since these functions are not in `sfnetworks` yet, load the attached R script containing very basic implementations of them.
-:::
-  
-```{r}
-bounds = st_as_sfc(st_network_bbox(net))
-net_random = play_geometric(10, radius = units::set_units(2000, "m"), bounds = bounds)
-plot(net_random)
-```
-```{r}
-points = st_sample(bounds, 10)
-plot(points, pch = 20)
-```
-```{r}
-net_delaunay = as_sfnetwork(points, "delaunay")
-plot(net_delaunay)
-```
-```{r}
-net_gabriel = as_sfnetwork(points, "gabriel")
-plot(net_gabriel)
-```
-
-## Conclusions
-
-- There is a lot of cool stuff to do with `sfnetworks` but also a lot to improve and add.
-- If you want to be part of it, know that contributing is easy. Opening issues or discussions with problems, bugs, ideas, etc., is already a very valuable way of contributing!
