@@ -6,11 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Lucas van der Meer">
-<meta name="author" content="Lorena Abad">
-<meta name="dcterms.date" content="2024-11-15">
 
-<title>Analyzing geospatial networks in R with sfnetworks</title>
+<title>Workshop showcase – Analyzing geospatial networks in R with sfnetworks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -67,7 +30,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./showcase.html" rel="next">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -117,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">About</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./showcase.html">Workshop showcase</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -150,13 +113,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./showcase.html" class="sidebar-item-text sidebar-link">
+  <a href="./showcase.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Workshop showcase</span></a>
   </div>
 </li>
@@ -165,52 +128,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#about" id="toc-about" class="nav-link active" data-scroll-target="#about">About</a>
-  <ul class="collapse">
-  <li><a href="#date" id="toc-date" class="nav-link" data-scroll-target="#date">Date</a></li>
-  <li><a href="#abstract" id="toc-abstract" class="nav-link" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule">Schedule</a></li>
-  <li><a href="#hands-on-setting" id="toc-hands-on-setting" class="nav-link" data-scroll-target="#hands-on-setting">Hands-on setting</a>
-  <ul class="collapse">
-  <li><a href="#working-locally" id="toc-working-locally" class="nav-link" data-scroll-target="#working-locally">1. Working locally</a></li>
-  <li><a href="#using-github-codespaces" id="toc-using-github-codespaces" class="nav-link" data-scroll-target="#using-github-codespaces">2. Using GitHub Codespaces</a></li>
-  </ul></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Analyzing geospatial networks in R with sfnetworks</h1>
-<p class="subtitle lead">65th Annual Conference of the South African Statistical Association</p>
+<h1 class="title">Workshop showcase</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Authors</div>
-    <div class="quarto-title-meta-contents">
-             <p>Lucas van der Meer <a href="mailto:lucas.vandermeer@plus.ac.at" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0001-6336-8628" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
-             <p>Lorena Abad <a href="mailto:lorena.abad@plus.ac.at" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0003-0554-734X" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 15, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -220,120 +153,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="about" class="level1 unnumbered">
-<h1 class="unnumbered">About</h1>
-<section id="date" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="date">Date</h2>
-<p>19 November 2024 | 08h30 - 13h00</p>
-</section>
-<section id="abstract" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="abstract">Abstract</h2>
-<p>Geospatial networks are graphs embedded in geographical space. That means that both the nodes and edges in the graph can be represented as geographic features (e.g.&nbsp;points and lines) with a location somewhere on or near the surface of the earth. They play an important role in many different domains, ranging from transportation planning and logistics to ecology and epidemiology. The structure and characteristics of geospatial networks go beyond standard graph topology, and therefore it is crucial to explicitly take space into account when analyzing them. The R package sfnetworks is created to facilitate such an integrated workflow. It combines the forces of two popular R packages, sf for spatial data science and tidygraph for standard graph analysis, and extends them with functionalities that are specific to geospatial network analysis, such as geographic shortest path calculations, geospatial network cleaning, and topology modification. It also facilitates smooth integration with packages for statistical analysis on spatial linear networks, and is designed to seamlessly fit into tidy data wrangling workflows. This workshop provides an introduction to the sfnetworks package for geospatial network analysis. We will start with simple examples on abstract dummy networks, and gradually move towards the analysis of real-world networks that we extract from OpenStreetMap. We will prepare several analytical tasks to solve, of varying difficulty. If you are already working with geospatial networks, you are also encouraged to bring your own use-cases.</p>
-</section>
-<section id="schedule" class="level2">
-<h2 class="anchored" data-anchor-id="schedule">Schedule</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Time</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>8h30 - 8h45</td>
-<td>Welcome + set-up</td>
-</tr>
-<tr class="even">
-<td>8h45 - 9h45</td>
-<td>Intro to <code>sfnetworks</code></td>
-</tr>
-<tr class="odd">
-<td>9h45 - 10h30</td>
-<td>Hands-on preparation</td>
-</tr>
-<tr class="even">
-<td>10h30 - 11h00</td>
-<td><em>Morning tea</em></td>
-</tr>
-<tr class="odd">
-<td>11h00 - 12h30</td>
-<td>Hands-on tasks</td>
-</tr>
-<tr class="even">
-<td>12h30 - 13h00</td>
-<td>Present your work + wrap-up</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="hands-on-setting" class="level2">
-<h2 class="anchored" data-anchor-id="hands-on-setting">Hands-on setting</h2>
-<p>For this workshop, we have materials to showcase <code>sfnetworks</code> and for you to work with the package on different tasks. We also encourage you to bring your own data and use cases to test <code>sfnetworks</code> capabilities for your workflows.</p>
-<p>To follow along and code for yourself you have to options:</p>
-<ol type="1">
-<li>Work locally on your own R and RStudio set-up</li>
-<li>Use GitHub Codespaces</li>
-</ol>
-<p>If you did not manage to prepare your set-up in advance for the workshop, we recommend to use GitHub Codespaces.</p>
-<section id="working-locally" class="level3">
-<h3 class="anchored" data-anchor-id="working-locally">1. Working locally</h3>
-<section id="r-and-rstudio-installation" class="level4">
-<h4 class="anchored" data-anchor-id="r-and-rstudio-installation">R and RStudio installation</h4>
-<p>A working installation of:</p>
-<ul>
-<li>R (follow <a href="https://cran.r-project.org/">CRAN recommendations</a> for your set-up).</li>
-<li>RStudio (&gt;= 2024.04.x with Quarto) see <a href="https://posit.co/download/rstudio-desktop/">here</a>.</li>
-</ul>
-</section>
-<section id="r-packages" class="level4">
-<h4 class="anchored" data-anchor-id="r-packages">R packages</h4>
-<p>Please run these commands inside the R console:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install the remotes package from CRAN Repo</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(remotes)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Install workshop and its dependencies</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"luukvdmeer/sfnetworks-workshop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="clone-the-workshop-repository" class="level4">
-<h4 class="anchored" data-anchor-id="clone-the-workshop-repository">Clone the workshop repository</h4>
-<p>To obtain the workshop materials you can <a href="https://github.com/luukvdmeer/sfnetworks-workshop">clone the repository</a> to run the Quarto documents interactively.</p>
-</section>
-</section>
-<section id="using-github-codespaces" class="level3">
-<h3 class="anchored" data-anchor-id="using-github-codespaces">2. Using GitHub Codespaces</h3>
-<section id="make-sure-you-have-a-github-account" class="level4">
-<h4 class="anchored" data-anchor-id="make-sure-you-have-a-github-account">Make sure you have a GitHub account</h4>
-<p>To use Codespaces you will need a GitHub account. You can <a href="https://github.com/">sign-up here</a>.</p>
-</section>
-<section id="create-your-codespace" class="level4">
-<h4 class="anchored" data-anchor-id="create-your-codespace">Create your codespace</h4>
-<p>Go to the <a href="https://github.com/luukvdmeer/sfnetworks-workshop">workshop GitHub repository</a> and click on the green button called “Code”, go to the “Codespaces” tab and click on “Create codespace on main”.</p>
-<p><img src="figs/codespaces-creation.png" class="img-fluid"></p>
-<p>A new tab will open where your Codespace will start setting-up. The process takes about 10 minutes. If you can do this before the workshop, you will save some time. However, we will go through this instructions at the start of the workshop to make sure the set-up is all set by the time we need to start coding!</p>
-</section>
-<section id="launch-rstudio" class="level4">
-<h4 class="anchored" data-anchor-id="launch-rstudio">Launch RStudio</h4>
-<p>Once the set-up is done, you can go to ports and launch the RStudio application in port 8787 by clicking on the browser button.</p>
-<p><img src="figs/codespaces-ports.png" class="img-fluid"></p>
-<p>If this does not work, you might need to reload the codespace page.</p>
-<p>You will get a pop-up window to type your <code>username/password</code>. You can use <code>rstudio/rstudio</code> for that.</p>
-<p>Now you should be in an RStudio server, congrats!</p>
-<p>The only thing missing is having the workshop files on our “Files” pane. For this, click on the <code>...</code> or “Go to directory” button on the files pane (shown with the red-arrow below). On the pop-up window type <code>/workspaces</code> and Enter.</p>
-<p><img src="figs/codespaces-wd.png" class="img-fluid"></p>
-<p>You should now be able to see the <code>sfnetorks-workshop</code> directory. Click on it and you will have a cloned access of the workshop materials.</p>
-<p>And you are all set!</p>
-</section>
-<section id="codespace-management" class="level4">
-<h4 class="anchored" data-anchor-id="codespace-management">Codespace management</h4>
-<p>Your Codespace should be available to you every time you go to the workshop repository. GitHub will auto-delete your Codespace after a certain amount of time if you have not used it. This is meant to free up your Codespace storage.</p>
-<p>If you have set-up the Codespace some days before the workshop, it should stay there but if you want to control when the Codespace is deleted, you can do so with the dropdown (<code>...</code>) next to your codespace and de-selecting the “Auto-delete codespace” option.</p>
+<p>If your group is satisfied (or even if you aren’t) with the work you did today, feel free to add your solutions or feedback, questions, etc. in this section.</p>
+<p>You can either add a section with the name of your group members as a PR or send your content to us via email and we will include it.</p>
 
 
-</section>
-</section>
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -758,11 +581,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="About">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">About</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./showcase.html" class="pagination-link" aria-label="Workshop showcase">
-        <span class="nav-page-text">Workshop showcase</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
