@@ -470,11 +470,19 @@ When you want to compute travel costs between many origins and destinations, you
 
 ## Task 4 ⭐⭐⭐
 
-**Can you create a better "bikeability" weight?**
+The custom weights for bicycle routing that you used in the previous tasks are very simple. They only prefer bikelanes and avoid large roads. But there is more to bicycle suitability than just that. Can you create bicycle routing weights that take more factors into account? Think for example of slopes (cycling uphill, flat or downhill), comfort (the type of street surface), and the "pleasurability" of the environment (cycling through green areas). You could even think of a weight that is time dependent, with different values during daytime and nighttime.
+
+::: {.callout-tip title="Hint" collapse=true}
+If you want to include slopes, we added the Digital Elevation Model (DEM) covering Cape Town to the data for this workshop. With the R package `{slopes}`, you can compute the slope of linestring geometries based on a provided DEM. See [here](https://luukvdmeer.github.io/UseR2024/notebook.html#estimate-cycling-travel-times) for an example. For other factors, you can use any additional data from OpenStreetMap by loading it through the `{osmdata}` package, just as we did for the Cape Town street network.
+:::
 
 ## Task 5 ⭐⭐⭐
 
-**If you have limited budget, where would you build bike lanes?**
+There is clearly a lack of bike lanes in Cape Town. Assume that the origins and destinations that you sampled in Task 3 are the places people want to bike between. Which streets would you prioritize to build bike lanes along?
+
+::: {.callout-tip title="Hint" collapse=true}
+You could base yourself on this paper from Szell et al (2022): [Growing Urban Bicycle Networks](https://doi.org/10.48550/arXiv.2107.02185). In the section "Growing bicycle networks from scratch" on Page 3 they explain a simple workflow to grow a new cycling network. In `{sfnetworks}`, you can create the "greedy triangulation" using `create_from_spatial_points()` with `connections = "delaunay"`. Betweenness centrality of edges can be computed using `tidygraph::centrality_edge_betweenness()`, and closeness centrality of nodes using `tidygraph::centrality_closeness()`.
+:::
 
 :::
 
@@ -486,19 +494,48 @@ When you want to compute travel costs between many origins and destinations, you
 
 ## Task 1 ⭐⚪⚪
 
-How many coffee shops can Annika reach from her coworking space? (cumulative opportunities accessibility)
+How many coffee shops can Annika reach in 15 minutes walking time from her coworking space?
+
+::: {.callout-note title="Note"}
+What we are computing here is also known as a **location-based accessibility measure**. We measure the accessibility of coffee shops from Annikas location. The specific measure you are computing now is one of the simplest, and known as a **cumulative opportunities** measure.
+:::
+
+::: {.callout-tip title="Hint" collapse=true}
+To compute travel costs over the network between locations, you can use the function `st_network_cost()`.
+:::
 
 ## Task 2 ⭐⭐⚪
 
-Now integrate a distance decay (gravitiy accessibility)
+Although Annika is willing to walk 15 minutes, she still prefers coffee shops that are closer. In the previous task, all coffee shops within 15 minutes are counted equally, no matter if they are 4 or 14 minutes away. Can you address this by integrating a *decay function*, that gives lower weights to coffee shops the further they are away from Annika. Then, use those weights to compute a weighted sum of coffee shops within Annikas reach.
+
+::: {.callout-note title="Note"}
+This type of accessibility measures with (continuous) decay functions are often referred to a **gravity-based accessibility**, since they were originally inspired by the concept of gravity, in which the gravitational force between two objects increases as they get closer together.
+:::
+
+::: {.callout-tip title="Hint" collapse=true}
+A common decay function is *exponential decay*, in the form $e^{-\beta}$. Often, $\beta$ will be estimated using observed travel data, but you can use a value of 0.5. Alternatively, you could use a linear decay function, a step-wise decay function, or anything you find appropriate.
+:::
 
 ## Task 3 ⭐⭐⚪
 
-Also integrate a attractiveness of the different destinations
+Annika likes some coffee shops more than others, simply because they serve better quality coffee in a cozier atmosphere. For those, she is less picky about the time she has to travel. If the reward is higher, she is does not mind to walk a bit longer! Can you address this by integrating a *attractiveness factor*, that assign higher weights to those coffee shops that Annika finds attractive. You can either assign the attractiveness randomly, or base it in some way on the available data.
 
-## Task 4 ⭐⭐⭐
+::: {.callout-note title="Note"}
+In gravity-based accessibility measures, the attractiveness of destinations is the equivalent of *mass* in gravity. A higher mass of the object means a higher gravitational force. In practice, however, you will see very few accessibility analysis that actually incorporate any kind of destination attractiveness.
+:::
 
-Integrate both supply and demand into the measure (2SFCA accessibility)
+## Task 4 ⭐⭐⚪
+
+Annika is of course not the only one visiting coffee shops. Within the study area, sample 100 locations of people that want to drink coffee. Assuming all these people opt to go to their nearest coffee shop, how many visitors would each shop have?
+
+::: {.callout-tip title="Hint" collapse=true}
+This type of analysis is called a **closest facility analysis**. An example is given in the package documentation, see [here](https://luukvdmeer.github.io/sfnetworks/articles/sfn05_routing.html#closest-facility-analysis).
+:::
+
+## Task 5 ⭐⭐⚪
+
+Now suppose there were no coffee shops in Cape Town, and you are the first person to start one. Knowing that the people you sampled in Task 4 are your potential customers, and you can choose any network node to start your coffee shop, where would you place it?
+
 :::
 
 ### Kaya {#sec-kaya .unnumbered}
@@ -507,18 +544,73 @@ Integrate both supply and demand into the measure (2SFCA accessibility)
 
 ::: panel-tabset
 
-## Task 1 ⭐⭐⚪
+## Task 1 ⭐⚪⚪
 
-Create a figure with the street directions/azimuths ⭐⚪⚪
+Kaya has been reading an interesting paper by Barthelemy & Boeing (2024): [A Review of the Structure of Street Networks](https://findingspress.org/article/122117-a-review-of-the-structure-of-street-networks). First, she wants to compute the basic measures mentioned in Table 1, for the study area in Cape Town. Can you help her do this? The measures are:
+
+- The average degree centrality of nodes
+- The proportion of dead-ends
+- The proportion of intersections where four or more streets come together
+- The average street length
+
+::: {.callout-tip title="Hint" collapse=true}
+The degree centrality of a node is the number of edges connected to it. This can be computed using `tidygraph::centrality_degree()`. Dead-ends are nodes with a degree centrality of one. Intersections were four or more streets come together are nodes with a degree centrality higher than four. The length of an edge can be computed using `sfnetworks::edge_length()`.
+:::
+
+Create a figure with the street directions/azimuths
 https://geoffboeing.com/2019/09/urban-street-network-orientation/
 
-## Task 2 ⭐⭐⚪
+## Task 2 ⭐⚪⚪
 
-Plot and map the distributions of degree centralilty, betweenness centrality, straightness centrality ⭐⭐⚪
+Kaya also reads in the paper that the detour ratio, or *circuity*, is an important concept in street networks. This measures how much longer the real streets are compared to the hypothetical situation in which all streets would be straight lines between the nodes. Can you compute this ratio for her?
 
-## Task 3 ⭐⭐⭐
+::: {.callout-tip title="Hint" collapse=true}
+To compute the detour ratio of each edge, you can use the function `edge_circuity()`.
+:::
 
-Are there any difference in the network orientation per suburb? 
+## Task 3 ⭐⭐⚪
+
+Now Kaya wants to replicate Figure 2 of the paper, which maps the betweenness centrality of nodes. Betweenness centrality of a node is the (normalized) proportion of shortest paths (computed between all possible node pairs) that pass through that node. Kaya argues that it is also interesting to compute and map this for edges instead of nodes, i.e. the proportion of shortest paths passing through an edge. Can you help her create these two maps?
+
+::: {.callout-tip title="Hint" collapse=true}
+The betweenness centrality of nodes can be computed using `tidygraph::centrality_betweenness()`, and of edges using `tidygraph::centrality_edge_betweenness()`. For visualization, we recommend to use the `{ggraph}` package. An example:
+
+```{r}
+#| eval: false
+ct_roads |>
+  mutate(bc = centrality_betweenness()) |>
+  ggraph("sf") +
+  geom_edge_sf() +
+  geom_node_sf(aes(color = bc, size = bc))
+```
+:::
+
+## Task 4 ⭐⭐⭐
+
+Finally, Kaya wants to create a polar histogram of street orientations like in Figure 3 of the paper. Besides one for the whole Cape Town study area, she wants to create separate ones for each suburb. Can you help her do this?
+
+::: {.callout-tip title="Hint" collapse=true}
+The orientation of edges (relative to the true north, in degrees) can be computed using the function `edge_azimuth()`. This does require an unprojected coordinate reference system, with longitude and latitude coordinates. Since this is only needed for this specific computation, we can use the *morphing* workflow of `{tidygraph}` to temporarily change the coordinate reference system of our network:
+
+```{r}
+#| eval: false
+ct_roads |>
+  morph(to_spatial_transformed, 4326) |>
+  activate(edges) |>
+  mutate(orientation = edge_azimuth(degrees = TRUE)) |>
+  unmorph()
+```
+:::
+
+::: {.callout-tip title="Hint" collapse=true}
+To create the polar histograms, use the great `{ggplot2}` package. Below is some code to do it, but try yourself first! The key is to use the function `geom_histogram()` in combination with `coord_radial()`.
+
+```{r}
+#| eval: false
+# some code
+```
+:::
+
 :::
 
 ### Joseph {#sec-joseph .unnumbered}
