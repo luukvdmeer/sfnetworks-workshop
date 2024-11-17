@@ -171,7 +171,7 @@ plot(filtered)
 
 The `sfnetworks` ecosystem can be summarized as:
 
-![](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/refs/heads/v1.0/vignettes/figures/dependencies.png)
+![](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/refs/heads/main/vignettes/figures/dependencies.png)
 
 ## Content
 
@@ -183,7 +183,7 @@ The sfnetwork data structure looks like a combination of an sf table for the nod
 net
 ```
 
-![](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/refs/heads/v1.0/vignettes/figures/data-structure.png)
+![](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/refs/heads/main/vignettes/figures/data-structure.png)
 
 Just as with an sf object, we can assign it a coordinate reference system...
 
