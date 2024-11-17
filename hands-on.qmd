@@ -162,7 +162,7 @@ ct_cafes = read_sf(
   rename(geometry = geom) 
 ```
 
-## Cape Town suburbs
+## Suburbs
 
 - To help Kaya, you will need data on Cape Town suburbs. We extracted them from OSM using the Ward bounds and the `place=suburb` combination.
 
@@ -253,9 +253,9 @@ kruger_roads = read_sf(
 ```{r}
 #| eval: false
 #| code-fold: true
-#| code-summary: "Unfold me for code to wrangle deg,min,sec data"
+#| code-summary: "Unfold me for code to wrangle deg, min, sec data"
 library(sp)
-kruger_camps_raw = read_csv("data/south-africa/kruger/kruger-rest-camps.csv", quote = "'") 
+kruger_camps_raw = read_csv("https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/kruger/kruger-rest-camps.csv", quote = "'") 
 kruger_camps = kruger_camps_raw |> 
   transmute(
     camp = Camp,
