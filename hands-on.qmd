@@ -17,6 +17,7 @@ library(tidyverse)
 
 ## Optional libraries depending on the tasks you pick:
 library(osmdata)
+library(sp)
 library(spatstat.linnet)
 ```
 
@@ -43,7 +44,7 @@ If you choose [Nicolaas](@sec-nicolaas), [Annika](@sec-annika) or [Kaya](@sec-ka
 
 ## Road network
 
-- The [Cape Town road network](data/south-africa/cape-town/cape_town_osm_roads.gpkg) data was queried from OpenStreetMap, using the "highway" key.
+- The [Cape Town road network](https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/cape-town/cape_town_osm_roads.gpkg) data was queried from OpenStreetMap, using the "highway" key.
   
 ```{r}
 #| eval: false
@@ -82,20 +83,20 @@ write_sf(
 )
 ```
 
-- The data is saved as a geopackage (.gpkg). You can load the data using the `sf` package and then convert it into a sfnetwork. PS. we rename the "geom" column to "geometry" due to a small bug with `ggraph` and called the object `ct_roads`
+- The data is saved as a geopackage (.gpkg). You can load the data using the `sf` package directly from a URL and then convert it into a sfnetwork. PS. we rename the "geom" column to "geometry" due to a small bug with `ggraph` and called the object `ct_roads`
   
 ```{r}
 #| code-fold: true
 #| code-summary: "Unfold me to see how to load the data"
 ct_roads = read_sf(
-  "data/south-africa/cape-town/cape_town_osm_roads.gpkg"
+  "https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/cape-town/cape_town_osm_roads.gpkg"
 ) |> 
   rename(geometry = geom)
 ```
 
 ## POIs
 
-- In the tasks below you will find different people who need help with spatial networks. We have compiled here a number of [points of interest (POIs)](data/south-africa/cape-town/cape_town_pois.gpkg) that you will need to complete the tasks. 
+- In the tasks below you will find different people who need help with spatial networks. We have compiled here a number of [points of interest (POIs)](https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/cape-town/cape_town_pois.gpkg) that you will need to complete the tasks. 
 
 ```{r}
 #| eval: false
@@ -124,14 +125,14 @@ write_sf(pois, "data/south-africa/cape-town/cape_town_pois.gpkg")
 #| code-fold: true
 #| code-summary: "Unfold me to see how to load the data"
 ct_pois = read_sf(
-  "data/south-africa/cape-town/cape_town_pois.gpkg"
+  "https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/cape-town/cape_town_pois.gpkg"
 ) |> 
   rename(geometry = geom)
 ```
 
 ## Coffee places
 
-- Finally, to help Annika you will need the location of [coffee places in Cape Town](data/south-africa/cape-town/cape_town_cafes.gpkg). For this we queried all the coffee places within the bounds used for the query of the Cape Town road network.
+- To help Annika you will need the location of [coffee places in Cape Town](https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/cape-town/cape_town_cafes.gpkg). For this we queried all the coffee places within the bounds used for the query of the Cape Town road network.
 
 ```{r}
 #| eval: false
@@ -156,9 +157,38 @@ write_sf(ct_cafes, "data/south-africa/cape-town/cape_town_cafes.gpkg")
 #| code-fold: true
 #| code-summary: "Unfold me to see how to load the data"
 ct_cafes = read_sf(
-  "data/south-africa/cape-town/cape_town_cafes.gpkg"
+  "https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/cape-town/cape_town_cafes.gpkg"
 ) |> 
-  rename(geometry = geom)
+  rename(geometry = geom) 
+```
+
+## Cape Town suburbs
+
+- To help Kaya, you will need data on Cape Town suburbs. We extracted them from OSM using the Ward bounds and the `place=suburb` combination.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Unfold me for code to extract CT suburbs from OSM"
+ct_suburbs_osm = opq(bounds) |> 
+  add_osm_feature(key = "place", value = "suburb") |> 
+  osmdata_sf()
+
+ct_suburbs = ct_suburbs_osm$osm_multipolygons |> 
+  select(name)
+
+write_sf(ct_suburbs, "data/south-africa/cape-town/cape_town_suburbs.gpkg")
+```
+
+- You can use `sf` to load this data. Remember our "geom" rename trick. We called this object `ct_suburbs`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me to see how to load the data"
+ct_suburbs = read_sf(
+  "https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/cape-town/cape_town_suburbs.gpkg"
+) |> 
+  rename(geometry = geom) 
 ```
 
 :::
@@ -171,7 +201,7 @@ If you choose [Joseph](@sec-joseph) or [Amina](@sec-amina), you will be working 
 
 ## Road network
 
-- The [Kruger NP road](data/south-africa/kruger/kruger_osm_roads.gpkg) data was queried from OpenStreetMap, using the "highway" key.
+- The [Kruger NP road](https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/kruger/kruger_osm_roads.gpkg) data was queried from OpenStreetMap, using the "highway" key.
   
 ```{r}
 #| eval: false
@@ -204,20 +234,54 @@ lines = roads |>
 write_sf(lines, "data/south-africa/kruger/kruger_osm_roads.gpkg")
 ```
 
-- The data is saved as a geopackage (.gpkg). You can load the data using the `sf` package and then convert it into a sfnetwork. PS. we rename the "geom" column to "geometry" due to a small bug with `ggraph`.
+- The data is saved as a geopackage (.gpkg). You can load the data using the `sf` package directly from a URL and then convert it into a sfnetwork. PS. we rename the "geom" column to "geometry" due to a small bug with `ggraph`. We called this object `kruger_roads`.
   
 ```{r}
 #| code-fold: true
 #| code-summary: "Unfold me to see how to load the data"
 kruger_roads = read_sf(
-  "data/south-africa/kruger/kruger_osm_roads.gpkg"
+  "https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/kruger/kruger_osm_roads.gpkg"
 ) |> 
   rename(geometry = geom)
 ```
 
+## Rest camps
+
+- The [Kruger rest camps](https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/kruger/kruger_rest_camps.gpkg) were obtained from the [SANParks website GPS waypoints](https://www.sanparks.org/parks/kruger/travel/gps-waypoints).
+- The table was manually copied to a CSV file and the code below shows how to wrangle the data and convert to an sf. We called this object `kruger_camps`.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Unfold me for code to wrangle deg,min,sec data"
+library(sp)
+kruger_camps_raw = read_csv("data/south-africa/kruger/kruger-rest-camps.csv", quote = "'") 
+kruger_camps = kruger_camps_raw |> 
+  transmute(
+    camp = Camp,
+    lat = as.numeric(char2dms(kruger_camps_raw$Latitude, chd = '°', chm = '’', chs = '”')),
+    lon = as.numeric(char2dms(kruger_camps_raw$Longitude, chd = '°', chm = '’', chs = '”'))
+  ) |> 
+  st_as_sf(coords = c("lon", "lat"), crs = 4326)
+
+write_sf(kruger_camps, "data/south-africa/kruger/kruger_rest_camps.gpkg")
+```
+
+- You can use `sf` to load this data. Remember our "geom" rename trick. We called this object `kruger_camps`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me to see how to load the data"
+kruger_camps = read_sf(
+  "https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/kruger/kruger_rest_camps.gpkg"
+) |> 
+  rename(geometry = geom)
+```
+
+
 ## Animal sightings
 
-- We queried [mammals' sightings](data/south-africa/kruger/kruger_mammalia_inaturalist.csv) data from iNaturalist. We limited the sightings to Mammals and check on their website the corresponding `place_id` for Kruger National Park
+- We queried [mammals' sightings](https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/kruger/kruger_mammalia_inaturalist.csv) data from iNaturalist. We limited the sightings to Mammals and check on their website the corresponding `place_id` for Kruger National Park.
 
 ```{r}
 #| eval: false
@@ -239,13 +303,13 @@ write_csv(
 )
 ```
 
-- The data is saved as a CSV file. You can use `readr`, part of the `tidyverse` package bundle to read this in.
+- The data is saved as a CSV file. You can use `readr`, part of the `tidyverse` package bundle to read this into R. We called this object `kruger_animals`.
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Unfold me to see how to read CSV data"
-test = read_csv(
-  "data/south-africa/kruger/kruger_mammalia_inaturalist.csv",
+kruger_animals = read_csv(
+  "https://github.com/luukvdmeer/sfnetworks-workshop/raw/refs/heads/main/data/south-africa/kruger/kruger_mammalia_inaturalist.csv",
   show_col_types = FALSE
 )
 ```
