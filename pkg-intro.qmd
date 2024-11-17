@@ -169,7 +169,9 @@ plot(area, border = "orange", lwd = 2, lty = 4, add = TRUE)
 plot(filtered)
 ```
 
-**INSERT FIGURE**
+The `sfnetworks` ecosystem can be summarized as:
+
+![](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/refs/heads/main/vignettes/figures/dependencies.png)
 
 ## Content
 
@@ -181,7 +183,7 @@ The sfnetwork data structure looks like a combination of an sf table for the nod
 net
 ```
 
-**INSERT FIGURE**
+![](https://raw.githubusercontent.com/luukvdmeer/sfnetworks/refs/heads/main/vignettes/figures/data-structure.png)
 
 Just as with an sf object, we can assign it a coordinate reference system...
 
