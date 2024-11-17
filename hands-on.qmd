@@ -246,7 +246,7 @@ write_csv(
 #| code-summary: "Unfold me to see how to read CSV data"
 test = read_csv(
   "data/south-africa/kruger/kruger_mammalia_inaturalist.csv",
-  show_col_types = TRUE
+  show_col_types = FALSE
 )
 ```
 
@@ -372,6 +372,50 @@ Pick your favorite.
 
 ::: panel-tabset
 
+## Task 1 ⭐⚪⚪
+
+Compute the shortest route between Cape Town train station and the Radison Red Hotel where Nicolaas has his meeting.
+
+::: {.callout-tip title="Hint" collapse=true}
+You can use the function `st_network_paths()` to find the shortest paths between nodes in the network. The nodes can be specified as spatial point features. In this case, the function will first find the nearest nodes to those points.
+:::
+
+## Task 2 ⭐⭐⚪
+
+The shortest route is not necessarily the best one for Nicolaas to ride his bike. He prefers to ride on bikelanes, and if they are not available, at least avoid larger roads with heavy traffic. Can you create a custom edge weight that would find the optimal route for Nicolaas, considering the specified preferences? How much longer is this route compared to the shortest route you computed before?
+
+::: {.callout-tip title="Hint" collapse=true}
+A custom weighting profile could create a "perceived length" of each edge by multiplying the true length with a multiplication factor that is a function of the road type.
+:::
+
+::: {.callout-tip title="Hint" collapse=true}
+Take a look at [this section](https://luukvdmeer.github.io/sfnetworks/articles/sfn05_routing.html#custom-routing) in the documentation to find out how to create a simple custom weighting profile. Note that the one is the documentation is meant for cars, so the one you would create for bikes would look different!
+:::
+
+## Task 3 ⭐⭐⚪
+
+Nicolaas is not the only one in Cape Town who would like to use a bicycle to get from A to B. Within the study area, sample 20 origins and 20 destinations of trips that people would like to do by bike. Can you compute for each of them how much longer the optimal route (according to the weights you created before) is compared to the shortest route?
+
+::: {.callout-tip title="Hint" collapse=true}
+To randomly sample spatial points, you can use the `st_sample()` function from the `{sf}` package.
+:::
+
+::: {.callout-tip title="Hint" collapse=true}
+When you want to compute travel costs between many origins and destinations, you can use the `st_network_cost()` function to create a OD cost matrix. If you want to compute costs using custom edge weights, but report the true distance of those routes, this is called *dual-weighted routing*. Learn [here](https://luukvdmeer.github.io/sfnetworks/articles/sfn05_routing.html#dual-weighted-routing) how to do this in `{sfnetworks}`. Do note that you have to change the routing backend to the `{dodgr}` package, since the default routing backend (the `{igraph}` package) does not support dual-weighted routing.
+:::
+
+## Task 4 ⭐⭐⭐
+
+**Can you create a better "bikeability" weight?**
+
+## Task 5 ⭐⭐⭐
+
+**If you have limited budget, where would you build bike lanes?**
+
+:::
+
+::: panel-tabset
+
 ## Tasks
 
 1.  Compute the shortest route between Cape Town train station and the Radison Red Hotel where Nicolaas has his meeting ⭐⚪⚪
@@ -417,6 +461,7 @@ Pick your favorite.
 ## Tasks
 
 1. Create a figure with the street directions/azimuths ⭐⚪⚪
+https://geoffboeing.com/2019/09/urban-street-network-orientation/
 2. Plot and map the distributions of degree centralilty, betweenness centrality, straightness centrality ⭐⭐⚪
 3. ... ⭐⭐⭐
 
