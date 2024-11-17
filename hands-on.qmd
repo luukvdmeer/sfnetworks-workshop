@@ -512,6 +512,38 @@ Integrate both supply and demand into the measure (2SFCA accessibility)
 Create a figure with the street directions/azimuths ⭐⚪⚪
 https://geoffboeing.com/2019/09/urban-street-network-orientation/
 
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me for..."
+ct_azimuths = ct_sfn_clean |> 
+  morph(to_spatial_transformed, 4326) |> 
+  activate(edges) |> 
+  mutate(angle = edge_azimuth(degrees = TRUE)) |> 
+  unmorph()
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me for..."
+library(units)
+ggplot(st_as_sf(ct_azimuths, "edges")) +
+  geom_histogram(aes(drop_units(angle)), bins = 72) +
+  scale_x_continuous(
+    limits = c(-180, 180),
+    expand = c(0, 0),
+    breaks = c(135, 90, 45, 0, -45, -90, -135, -180),
+    labels = c("S45°E", "E", "N45°E", "N", "N45°W", "W", "S45°W", "S")
+  ) +
+  coord_radial(start = pi, direction = 1) +
+  theme_bw() +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank()
+  )
+```
+
+
 ## Task 2 ⭐⭐⚪
 
 Plot and map the distributions of degree centralilty, betweenness centrality, straightness centrality ⭐⭐⚪
@@ -519,6 +551,39 @@ Plot and map the distributions of degree centralilty, betweenness centrality, st
 ## Task 3 ⭐⭐⭐
 
 Are there any difference in the network orientation per suburb? 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me for..."
+# Project suburb data and wrangle
+ct_suburbs = st_transform(ct_suburbs, st_crs(ct_azimuths)) |> 
+  transmute(suburb = name)
+ct_azimuths_suburb = st_join(ct_azimuths, ct_suburbs)
+```
+
+
+```{r}
+#| code-fold: true
+#| code-summary: "Unfold me for..."
+library(units)
+ggplot(st_as_sf(ct_azimuths_suburb, "edges")) +
+  geom_histogram(aes(drop_units(angle)), bins = 72) +
+  scale_x_continuous(
+    limits = c(-180, 180),
+    expand = c(0,0),
+    breaks = c(135, 90, 45, 0, -45, -90, -135, -180),
+    labels = c("S45°E", "E", "N45°E", "N", "N45°W", "W", "S45°W", "S")
+  ) +
+  coord_radial(start = pi, direction = 1) +
+  facet_wrap(~suburb, scales = "free_y") +
+  theme_bw() +
+  theme(
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_blank()
+  )
+```
+
 :::
 
 ### Joseph {#sec-joseph .unnumbered}
