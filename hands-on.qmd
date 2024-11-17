@@ -557,9 +557,6 @@ Kaya has been reading an interesting paper by Barthelemy & Boeing (2024): [A Rev
 The degree centrality of a node is the number of edges connected to it. This can be computed using `tidygraph::centrality_degree()`. Dead-ends are nodes with a degree centrality of one. Intersections were four or more streets come together are nodes with a degree centrality higher than four. The length of an edge can be computed using `sfnetworks::edge_length()`.
 :::
 
-Create a figure with the street directions/azimuths
-https://geoffboeing.com/2019/09/urban-street-network-orientation/
-
 ## Task 2 ⭐⚪⚪
 
 Kaya also reads in the paper that the detour ratio, or *circuity*, is an important concept in street networks. This measures how much longer the real streets are compared to the hypothetical situation in which all streets would be straight lines between the nodes. Can you compute this ratio for her?
