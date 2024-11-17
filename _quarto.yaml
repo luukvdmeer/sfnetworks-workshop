@@ -16,8 +16,8 @@ book:
   date: "today"
   chapters:
     - index.qmd
-    # - pkg-intro.qmd
-    # - hands-on.qmd
+    - pkg-intro.qmd
+    - hands-on.qmd
     - showcase.qmd
   repo-url: "https://github.com/luukvdmeer/sfnetworks-workshop"
   page-footer:
