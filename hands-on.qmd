@@ -478,42 +478,27 @@ When you want to compute travel costs between many origins and destinations, you
 
 :::
 
-::: panel-tabset
-
-## Tasks
-
-1.  Compute the shortest route between Cape Town train station and the Radison Red Hotel where Nicolaas has his meeting ⭐⚪⚪
-2.  Compute the route that avoids heavy traffic and prefers bikelanes ⭐⭐⚪
-3.  Compute how much longer that optimal route is ⭐⭐⚪
-4.  Do that computation also for all people at all address points ⭐⭐⚪
-5.  If you have limited budget, where would you build bike lanes? ⭐⭐⭐
-6.  Can you create a better "bikeability" weight? ⭐⭐⭐
-
-## Hint 1
-
-## Hint 2
-
-## Hint 3
-:::
-
 ### Annika {#sec-annika .unnumbered}
 
 ![](personas/personas-Annika.png)
 
 ::: panel-tabset
 
-## Tasks
+## Task 1 ⭐⚪⚪
 
-1. How many coffee shops can Annika reach from her coworking space? (cumulative opportunities accessibility) ⭐⚪⚪
-2. Now integrate a distance decay (gravitiy accessibility) ⭐⭐⚪
-3. Also integrate a attractiveness of the different destinations ⭐⭐⚪
-4. Integrate both supply and demand into the measure (2SFCA accessibility) ⭐⭐⭐
+How many coffee shops can Annika reach from her coworking space? (cumulative opportunities accessibility)
 
-## Hint 1
+## Task 2 ⭐⭐⚪
 
-## Hint 2
+Now integrate a distance decay (gravitiy accessibility)
 
-## Hint 3
+## Task 3 ⭐⭐⚪
+
+Also integrate a attractiveness of the different destinations
+
+## Task 4 ⭐⭐⭐
+
+Integrate both supply and demand into the measure (2SFCA accessibility)
 :::
 
 ### Kaya {#sec-kaya .unnumbered}
@@ -522,18 +507,18 @@ When you want to compute travel costs between many origins and destinations, you
 
 ::: panel-tabset
 
-## Tasks
+## Task 1 ⭐⭐⚪
 
-1. Create a figure with the street directions/azimuths ⭐⚪⚪
+Create a figure with the street directions/azimuths ⭐⚪⚪
 https://geoffboeing.com/2019/09/urban-street-network-orientation/
-2. Plot and map the distributions of degree centralilty, betweenness centrality, straightness centrality ⭐⭐⚪
-3. ... ⭐⭐⭐
 
-## Hint 1
+## Task 2 ⭐⭐⚪
 
-## Hint 2
+Plot and map the distributions of degree centralilty, betweenness centrality, straightness centrality ⭐⭐⚪
 
-## Hint 3
+## Task 3 ⭐⭐⭐
+
+Are there any difference in the network orientation per suburb? 
 :::
 
 ### Joseph {#sec-joseph .unnumbered}
@@ -542,17 +527,17 @@ https://geoffboeing.com/2019/09/urban-street-network-orientation/
 
 ::: panel-tabset
 
-## Tasks
+## Task 1 ⭐⭐⚪
 
-1. Compute the probabilities of lion sightings per road type ⭐⭐⚪
-2. Compute the most optimal route so that Francois can visit all the camps and how long would it take him? ⭐⭐⚪
-3. Identify locations with high probabilities of seeing the big 5, do these correspond to the rest camps? ⭐⭐⚪
+Compute the probabilities of lion sightings per road type
 
-## Hint 1
+## Task 2 ⭐⭐⚪
 
-## Hint 2
+Compute the most optimal route so that Francois can visit all the camps and how long would it take him?
 
-## Hint 3
+## Task 3 ⭐⭐⚪
+
+Identify locations with high probabilities of seeing the big five, do these correspond to the rest camps?
 :::
 
 ### Amina {#sec-amina .unnumbered}
@@ -563,13 +548,16 @@ https://geoffboeing.com/2019/09/urban-street-network-orientation/
 
 ## Tasks
 
-1. Create a map of animal sightings delineating hotspots ⭐⭐⚪
-2. Compute some descriptive statistics of the sightings in relation to the network ⭐⭐⚪
-3. Can Amina use Kruger data to predict wildlife sightings in the Limpopo Park in Mozambique? ⭐⭐⭐
 
-## Hint 1
+## Task 1 ⭐⭐⚪
 
-## Hint 2
+Create a map of animal sightings delineating hotspots
 
-## Hint 3
+## Task 2 ⭐⭐⚪
+
+Compute some descriptive statistics of the sightings in relation to the network
+
+## Task 3 ⭐⭐⭐
+
+Can Amina use Kruger data to predict wildlife sightings in the Limpopo Park in Mozambique?
 :::
