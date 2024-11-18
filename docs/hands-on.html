@@ -196,7 +196,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./showcase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Workshop showcase</span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Workshop showcase</span></span></a>
   </div>
 </li>
     </ul>
@@ -249,6 +249,8 @@ window.Quarto = {
 </header>
 
 
+<p>We think the best way of learning is by doing. Today you are all spatial network experts and you will be helping different people with some tasks.</p>
+<p>We will first load some libraries you need, explain the data we provided for you, do some data pre-processing and finally, you may be able to work on the tasks.</p>
 <section id="libraries" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="libraries"><span class="header-section-number">2.1</span> Libraries</h2>
 <p>Here we load the necessary libraries for our hands-on session.</p>
@@ -288,7 +290,7 @@ Tip
 <p>We also queried data from <a href="https://www.inaturalist.org/">iNaturalist</a> with <code>rinat</code>. And have also saved this into a dataset for your convenience.</p>
 <section id="cape-town-datasets" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="cape-town-datasets"><span class="header-section-number">2.2.1</span> Cape Town datasets</h3>
-<p>If you choose <a href="@sec-nicolaas">Nicolaas</a>, <a href="@sec-annika">Annika</a> or <a href="@sec-kaya">Kaya</a>, you will be working with data in Cape Town. We provide you with the following datasets:</p>
+<p>If you choose <a href="https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-nicolaas">Nicolaas</a>, <a href="https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-annika">Annika</a> or <a href="https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-kaya">Kaya</a>, you will be working with data in Cape Town. We provide you with the following datasets:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Road network</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">POIs</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Coffee places</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Suburbs</a></li></ul>
 <div class="tab-content">
@@ -449,7 +451,7 @@ Tip
 </section>
 <section id="kruger-datasets" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="kruger-datasets"><span class="header-section-number">2.2.2</span> Kruger datasets</h3>
-<p>If you choose <a href="@sec-joseph">Joseph</a> or <a href="@sec-amina">Amina</a>, you will be working in Kruger National Park. We prepared the following datasets:</p>
+<p>If you choose <a href="https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-joseph">Joseph</a> or <a href="https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-amina">Amina</a>, you will be working in Kruger National Park. We prepared the following datasets:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Road network</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Rest camps</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Animal sightings</a></li></ul>
 <div class="tab-content">
@@ -662,7 +664,7 @@ Tip
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true"><span style="color:orange;"><strong>2. Cleaning the network</strong></span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Cape Town</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">Kruger</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
-<p>A typical workflow to clean a network was shown in the introductory part. Remember when we talked about cleaning the dirty network? For networks queried from OpenStreetMap, it is particularly important to clean your network. You can find more information in the package vignette <a href="">vignette name here</a>.</p>
+<p>A typical workflow to clean a network was shown in the introductory part. Remember when we talked about cleaning the dirty network? For networks queried from OpenStreetMap, it is particularly important to clean your network. You can find more information in the package vignette <a href="https://luukvdmeer.github.io/sfnetworks/articles/sfn03_cleaning.html">“Cleaning spatial networks”</a>.</p>
 <p>This is a recap of the usual steps:</p>
 <ol type="a">
 <li>Subdivide the edges</li>
@@ -1603,7 +1605,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./showcase.html" class="pagination-link" aria-label="Workshop showcase">
-        <span class="nav-page-text">Workshop showcase</span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Workshop showcase</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

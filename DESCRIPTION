@@ -1,11 +1,13 @@
-Package: sfnetworks-workshop
+Package: sfnetworksWorkshop
 Type: Book
 Title: Materials for SASA 2024 sfnetworks workshop
 Version: 0.0.0.9000
 Authors@R: 
-    c(person("Lucas", "van der Meer", "lucas.vandermeer@plus.ac.at", role = c("aut", "cre"),
+    c(person(given = "Lucas", family = "van der Meer",
+          email = "lucas.vandermeer@plus.ac.at", role = c("aut", "cre"),
           comment = c(ORCID = "0000-0001-6336-8628")),
-      person("Lorena", "Abad", , "lorena.abad@plus.ac.at", role = c("aut", "cre"),
+      person(given = "Lorena", family = "Abad", 
+          email = "lorena.abad@plus.ac.at", role = c("aut"),
           comment = c(ORCID = "0000-0003-0554-734X")))
 Description: Installs packages for sfnetworks workshop.
 Encoding: UTF-8
