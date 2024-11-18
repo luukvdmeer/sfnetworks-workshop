@@ -354,7 +354,7 @@ kruger_sfn
 A typical workflow to clean a network was shown in the introductory part. 
 Remember when we talked about cleaning the dirty network?
 For networks queried from OpenStreetMap, it is particularly important to clean your network. 
-You can find more information in the package vignette [vignette name here]().
+You can find more information in the package vignette [Cleaning spatial networks](https://luukvdmeer.github.io/sfnetworks/articles/sfn03_cleaning.html).
 
 This is a recap of the usual steps:
 
@@ -591,11 +591,11 @@ The orientation of edges (relative to the true north, in degrees) can be compute
 
 ```{r}
 #| eval: false
-(ct_azimuths = ct_roads |>
+ct_azimuths = ct_roads |>
   morph(to_spatial_transformed, 4326) |>
   activate(edges) |>
   mutate(orientation = edge_azimuth(degrees = TRUE)) |>
-  unmorph())
+  unmorph()
 ```
 :::
 
@@ -631,17 +631,34 @@ ggplot(st_as_sf(ct_azimuths, "edges")) +
 
 ::: panel-tabset
 
-## Task 1 ⭐⭐⚪
+## Task 1 ⭐⚪⚪
 
-Compute the probabilities of lion sightings per road type
+Joseph is a bit tired of having to deal with all these silly tourist questions. He asks you to help him. First up, Gunther from Austria. Are there more lion sightings reported on asphalt roads than on unpaved roads? And does this actually say anything about the probability of Gunther seeing lions when he is on a certain type of road?
 
-## Task 2 ⭐⭐⚪
+::: {.callout-tip title="Hint" collapse=true}
+To find the nearest edge to point features, you can use the function `nearest_edges()` (or `nearest_edge_ids()` to only get their indices). To regroup the road types into fewer groups, look at the function `fct_collapse()` of the `forcats` package.
+:::
 
-Compute the most optimal route so that Francois can visit all the camps and how long would it take him?
+## Task 2 ⭐⚪⚪
 
-## Task 3 ⭐⭐⚪
+Answer the second question, from Francois. How does the shortest route visiting all camps once look like?
 
-Identify locations with high probabilities of seeing the big five, do these correspond to the rest camps?
+::: {.callout-note title="Note"}
+The problem you are solving here is a specific type of route optimization, commonly known as the **traveling salesman problem**.
+:::
+
+::: {.callout-tip title="Hint" collapse=true}
+In `{sfnetworks}`, you can solve traveling salesman problems using the `st_network_travel()` function, which provides an interface to the `{TSP}` package.
+:::
+
+## Task 3 ⭐⚪⚪
+
+To answer Susannes question, find out if there is a (negative?) correlation between the number of big five sightings and distance to rest camps. And does this actually say anything about the probability of seeing them when you are at a certain distance from the camp?
+
+::: {.callout-tip title="Hint" collapse=true}
+To compute distances between points on the network, you can use the function `st_network_cost()`. If the points do not match a node location, they will first be snapped to their nearest node. For more accurate results, it is a good idea to first blend the points into the network (i.e., adding them as new nodes at their nearest location on the network) using the function `st_network_blend()`.
+:::
+
 :::
 
 ### Amina {#sec-amina .unnumbered}
@@ -650,15 +667,97 @@ Identify locations with high probabilities of seeing the big five, do these corr
 
 ::: panel-tabset
 
-## Task 1 ⭐⭐⚪
+## Task 1 ⭐⚪⚪
 
-Create a map of animal sightings delineating hotspots
+Amina knows very well that the first step of a spatial analysis is to visually explore the data on a map. Make a map showing the network and the wildlife sightings. You can either choose to map all sightings together, or make some separate maps for different species. It may also be interesting to color edges by an attribute of interest, e.g. the road type, or the number of sightings on each edge.
+
+::: {.callout-tip title="Hint" collapse=true}
+For visualization of sfnetwork objects, we recommend to use the `{ggraph}` package. See [here](https://luukvdmeer.github.io/sfnetworks/articles/sfn01_intro.html#visualizing-spatial-networks) for some examples of how to do this.
+:::
 
 ## Task 2 ⭐⭐⚪
 
-Compute some descriptive statistics of the sightings in relation to the network
+On the map Amina sees that the sightings appear to be spatially clustered. She wants to delineate these clusters using a spatial clustering algorithm, based on distances over the network rather than euclidean distances. Can you do this for her?
+
+::: {.callout-tip title="Hint" collapse=true}
+The function `group_spatial_dbscan()` provides an interface to the `{dbscan}` package that can be used to cluster network nodes using the [DBSCAN spatial clustering algorithm](https://en.wikipedia.org/wiki/DBSCAN), based on network distance. However, we want to cluster the wildlife sightings. This would first require us to add them as nodes to the network, then focus only on those nodes using the new `focus()` verb of `{tidygraph}`, and then calling `group_spatial_dbscan()` on the focused network. Alternatively, you could call the `dbscan()` function of the `{dbscan}` package directly, feeding it the network distance matrix of the wildlife sighting locations, as computed with `st_network_cost()`.
+
+However, you are also free to choose any other spatial clustering technique!
+:::
 
 ## Task 3 ⭐⭐⭐
 
-Can Amina use Kruger data to predict wildlife sightings in the Limpopo Park in Mozambique?
+Amina decides to analyze the wildlife sightings as a spatial point patterns. Can you see any problems with that approach? Regardless of that, Amina proceeds with her plan. First, she creates a spatial point pattern on a linear network using the `{spatstat.linnet}` package, which integrates well with `{sfnetworks}`. Then, she does some standard exploratory analysis:
+
+- Estimating the intensity of the point pattern at each location on the network.
+- Assessing if the point pattern is spatially random.
+
+Amina expects that the road surface type is a good predictor for wildlife sightings. Therefore, she fits a point pattern model to the data using road surface type as a covariate.
+
+Can you perform this analysis for Amina? And can you advice her if this model is in any way useful to predict wildlife sightings in the Limpopo National Park? How could she improve her model?
+
+::: {.callout-tip title="Hint" collapse=true}
+There is a good integration between `{sfnetworks}` and the `{spatstat.linnet}` package for spatial point pattern analysis. Amines analysis could look something like:
+
+```{r}
+#| eval: false
+# Convert a sfnetwork into a linnet object.
+# This cannot handle multiple edges between the same nodes.
+# Hence, we need to simplify the network first.
+# The network also needs to be connected.
+# Hence, we need to select the largest connected component.
+linnet = kruger_roads |>
+  convert(to_spatial_simple) |>
+  convert(to_largest_component) |>
+  as.linnet()
+
+# Convert the sightings into a point pattern.
+ppp = as.ppp(kruger_animals)
+
+# Convert the point patterns to a point pattern on the network.
+lpp = lpp(ppp, linnet)
+
+# Estimate the intensity of the point pattern.
+# We use Euclidean distance just to speed up the process.
+D = density(lpp, distance = "euclidean")
+plot(density)
+
+# Assess spatial randomness.
+cdf.test(lpp, "x") # Along the x-axis
+cdf.test(lpp, "y") # Along the y-axis
+
+# Reorganize the road surface attribute.
+# Less common types get merged into a single type "other".
+# NA types get removed.
+kruger_roads_new = kruger_roads |>
+  activate(edges) |>
+  mutate(surface_new = fct_lump(surface, n = 4)) |>
+  filter(!is.na(surface_new)) |>
+  convert(to_largest_component) |>
+  convert(to_spatial_simple) |>
+
+linnet_new = as.linnet(kruger_roads_new)
+
+# Create a marked tesselation of the network.
+# Using surface type as mark.
+lintess = lintess(
+  L = linnet_new,
+  df = data.frame(
+    seg = seq_len(n_edges(kruger_roads_new)),
+    t0 = 0,
+    t1 = 1,
+    tile = kruger_roads_new |> activate(edges) |> pull(surface_new)
+  )
+)
+
+# Fit a point process model using road surface as covariate.
+M = lppm(unmark(lpp) ~ lintess)
+M
+```
 :::
+
+:::
+
+### You!
+
+Do you have any problems in mind to solve with the provided data, using `{sfnetworks}`? Go ahead and try it! We are there to help.
