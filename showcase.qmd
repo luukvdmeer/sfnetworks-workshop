@@ -1,5 +1,9 @@
-# Workshop showcase {.unnumbered}
+# Workshop showcase
 
 If your group is satisfied (or even if you aren't) with the work you did today, feel free to add your solutions or feedback, questions, etc. in this section. 
 
-You can either add a section with the name of your group members as a PR or send your content to us via email and we will include it. 
+You can either add a section with the name of your group members as a [pull request](https://github.com/luukvdmeer/sfnetworks-workshop/compare) (you should [fork the repository first](https://github.com/luukvdmeer/sfnetworks-workshop/fork)) or send your content to us via email and we will include it. 
+
+## Example group 
+
+Some feedback on the workshop and our solution for Joseph's tasks go here...

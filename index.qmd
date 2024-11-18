@@ -24,7 +24,7 @@ Geospatial networks are graphs embedded in geographical space. That means that b
 For this workshop, we have materials to showcase `sfnetworks` and for you to work with the package on different tasks. 
 We also encourage you to bring your own data and use cases to test `sfnetworks` capabilities for your workflows. 
 
-To follow along and code for yourself you have to options:
+To follow along and code for yourself you have two options:
 
 1. Work locally on your own R and RStudio set-up
 2. Use GitHub Codespaces

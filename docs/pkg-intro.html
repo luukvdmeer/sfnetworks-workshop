@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./showcase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Workshop showcase</span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Workshop showcase</span></span></a>
   </div>
 </li>
     </ul>
@@ -793,7 +793,7 @@ Note
 # Node data: 12 × 2
      geometry keep_me
   &lt;POINT [m]&gt; &lt;lgl&gt;  
-1       (0 1) TRUE   
+1       (0 1) FALSE  
 2       (1 1) FALSE  
 3       (1 2) TRUE   
 # ℹ 9 more rows</code></pre>
@@ -818,32 +818,26 @@ Note
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(nodes) <span class="sc">|&gt;</span></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(keep_me)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A sfnetwork: 9 nodes and 6 edges
+<pre><code># A sfnetwork: 4 nodes and 1 edges
 #
 # An unrooted forest with 3 trees and spatially explicit edges
 #
 # Dimension: XY
-# Bounding box: xmin: 0 ymin: 0 xmax: 6 ymax: 2
+# Bounding box: xmin: 1 ymin: 0 xmax: 4 ymax: 2
 # Projected CRS: Cape / Lo33
 #
-# Node data: 9 × 2 (active)
+# Node data: 4 × 2 (active)
      geometry keep_me
   &lt;POINT [m]&gt; &lt;lgl&gt;  
-1       (0 1) TRUE   
-2       (1 2) TRUE   
-3       (1 0) TRUE   
-4       (2 2) TRUE   
-5       (3 1) TRUE   
-6       (4 2) TRUE   
-# ℹ 3 more rows
+1       (1 2) TRUE   
+2       (1 0) TRUE   
+3       (2 2) TRUE   
+4       (4 2) TRUE   
 #
-# Edge data: 6 × 5
+# Edge data: 1 × 5
    from    to         geometry name   length
   &lt;int&gt; &lt;int&gt; &lt;LINESTRING [m]&gt; &lt;chr&gt;     [m]
-1     2     4       (1 2, 2 2) edge_e   1   
-2     3     7       (1 0, 4 0) edge_f   3   
-3     5     6       (3 1, 4 2) edge_j   1.41
-# ℹ 3 more rows</code></pre>
+1     1     3       (1 2, 2 2) edge_e      1</code></pre>
 </div>
 </div>
 </section>
@@ -989,7 +983,7 @@ Tip
 # Node data: 12 × 4 (active)
      geometry keep_me degree poly_id
   &lt;POINT [m]&gt; &lt;lgl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
-1       (0 1) TRUE         1       1
+1       (0 1) FALSE        1       1
 2       (1 1) FALSE        4       1
 3       (1 2) TRUE         2       1
 4       (1 0) TRUE         2       1
@@ -1082,7 +1076,7 @@ Tip
 # Node data: 12 × 4
      geometry keep_me degree    sc
   &lt;POINT [m]&gt; &lt;lgl&gt;    &lt;dbl&gt; &lt;dbl&gt;
-1       (0 1) TRUE         1 0.892
+1       (0 1) FALSE        1 0.892
 2       (1 1) FALSE        4 0.936
 3       (1 2) TRUE         2 0.806
 # ℹ 9 more rows</code></pre>

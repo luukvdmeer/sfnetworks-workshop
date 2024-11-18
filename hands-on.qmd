@@ -1,5 +1,9 @@
 # Hands-on
 
+We think the best way of learning is by doing. Today you are all spatial network experts and you will be helping different people with some tasks. 
+
+We will first load some libraries you need, explain the data we provided for you, do some data pre-processing and finally, you may be able to work on the tasks.
+
 ## Libraries
 
 Here we load the necessary libraries for our hands-on session.
@@ -38,7 +42,7 @@ We also queried data from [iNaturalist](https://www.inaturalist.org/) with `rina
 
 ### Cape Town datasets
 
-If you choose [Nicolaas](@sec-nicolaas), [Annika](@sec-annika) or [Kaya](@sec-kaya), you will be working with data in Cape Town. We provide you with the following datasets:
+If you choose [Nicolaas](https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-nicolaas), [Annika](https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-annika) or [Kaya](https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-kaya), you will be working with data in Cape Town. We provide you with the following datasets:
 
 ::: panel-tabset
 
@@ -195,7 +199,8 @@ ct_suburbs = read_sf(
 
 ### Kruger datasets
 
-If you choose [Joseph](@sec-joseph) or [Amina](@sec-amina), you will be working in Kruger National Park. We prepared the following datasets:
+If you choose [Joseph](https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-joseph) or [Amina](https://luukvdmeer.github.io/sfnetworks-workshop/hands-on.html#sec-amina), you will be working in Kruger National Park.
+We prepared the following datasets:
 
 ::: panel-tabset
 
@@ -354,7 +359,7 @@ kruger_sfn
 A typical workflow to clean a network was shown in the introductory part. 
 Remember when we talked about cleaning the dirty network?
 For networks queried from OpenStreetMap, it is particularly important to clean your network. 
-You can find more information in the package vignette [vignette name here]().
+You can find more information in the package vignette ["Cleaning spatial networks"](https://luukvdmeer.github.io/sfnetworks/articles/sfn03_cleaning.html).
 
 This is a recap of the usual steps:
 
