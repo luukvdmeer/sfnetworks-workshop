@@ -3,11 +3,11 @@ Workshop on sfnetworks at the SASA conference 2024
 
 You can find the workshop content here: <https://luukvdmeer.github.io/sfnetworks-workshop/>
 
-## Date {.unnumbered}
+## Date
 
 19 November 2024 | 08h30 - 13h00
 
-## Abstract {.unnumbered}
+## Abstract
 
 Geospatial networks are graphs embedded in geographical space.
 That means that both the nodes and edges in the graph can be represented as geographic features (e.g. points and lines) with a location somewhere on or near the surface of the earth.
