@@ -108,9 +108,9 @@ ct_roads = read_sf(
 #| code-summary: "Unfold me for code to create a sf from point coordinates"
 ## POIs in CT
 pois = st_sfc(
-  st_point(c(-33.922584,18.426465)),
-  st_point(c(-33.909360,18.422753)),
-  st_point(c(-33.917620,18.422291)),
+  st_point(c(18.426465,-33.922584)),
+  st_point(c(18.422753,-33.909360)),
+  st_point(c(18.422291,-33.917620)),
   crs = 4326
 ) |> 
   st_as_sf(place = c(
