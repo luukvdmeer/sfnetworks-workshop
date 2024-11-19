@@ -47,7 +47,7 @@ Please run these commands inside the R console:
 
 ```r
 # Install the remotes package from CRAN Repo
-install.packages(remotes)
+install.packages("remotes")
 
 # Install workshop and its dependencies
 remotes::install_github("luukvdmeer/sfnetworks-workshop")
