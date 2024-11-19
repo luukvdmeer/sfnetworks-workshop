@@ -65,8 +65,7 @@ bb = getbb(bounds, format_out = 'sf_polygon')
 # Download OSM data for Cape Town, with the key=highway
 roads = opq(bounds) |>
   add_osm_feature(key = "highway") |>
-  osmdata_sf() |> 
-  osm_poly2line()
+  osmdata_sf()
 # Create a LINESTRING sf object with selected columns
 lines = roads |> 
   pluck("osm_lines") |> 
@@ -337,7 +336,7 @@ If you are stuck, check the solution code on the next tabs.
 ## Cape Town
 
 ```{r}
-ct_sfn = as_sfnetwork(ct_roads, directed = FALSE) |>
+ct_sfn = as_sfnetwork(ct_roads, directed = FALSE, subdivide = TRUE) |>
   st_transform(22293)
 
 ct_sfn
@@ -346,7 +345,7 @@ ct_sfn
 ## Kruger
 
 ```{r}
-kruger_sfn = as_sfnetwork(kruger_roads, directed = FALSE) |>
+kruger_sfn = as_sfnetwork(kruger_roads, directed = FALSE, subdivide = TRUE) |>
   st_transform(22293)
 
 kruger_sfn
@@ -373,7 +372,7 @@ If you got stuck and can't remember the code, see the next tabs.
 
 ```{r}
 ct_sfn_clean = ct_sfn |>
-  convert(to_spatial_subdivision) |>
+  # convert(to_spatial_subdivision) |>
   convert(to_spatial_smooth, .clean = TRUE) |>
   convert(to_largest_component)
 ```
@@ -382,7 +381,7 @@ ct_sfn_clean = ct_sfn |>
 
 ```{r}
 kruger_sfn_clean = kruger_sfn |>
-  convert(to_spatial_subdivision) |>
+  # convert(to_spatial_subdivision) |>
   convert(to_spatial_smooth, .clean = TRUE) |>
   convert(to_largest_component)
 ```
